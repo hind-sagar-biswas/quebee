@@ -8,7 +8,7 @@
     "license": "MIT",
     "scripts": {
         "test": "./vendor/bin/phpunit"
-    }
+    },
     "autoload": {
         "psr-4": {
             "Hindbiswas\\QueBee\\": "src/"
