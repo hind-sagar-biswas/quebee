@@ -1,0 +1,21 @@
+{
+    "name": "hindbiswas/que_bee",
+    "description": "Qb - a lightweight Query Builder for SQL",
+    "type": "library",
+    "require-dev": {
+        "phpunit/phpunit": "^10.3"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Hindbiswas\\QueBee\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Hind Sagar Biswas",
+            "email": "hindsbhk@gmail.com"
+        }
+    ],
+    "require": {}
+}
