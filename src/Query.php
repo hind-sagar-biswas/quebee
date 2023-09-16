@@ -8,7 +8,7 @@ use Hindbiswas\QueBee\Query\QuerySelect;
 use Hindbiswas\QueBee\Query\QueryUpdate;
 
 class Query {
-    public static function select(array $columns) { 
+    public static function select(array $columns = []) { 
         if (empty($columns)) return new QuerySelect(['*']); 
         return new QuerySelect($columns); 
     }
@@ -32,7 +32,7 @@ class Query {
         int|string|null|bool $secondValue = null
     )
     {
-        $sqlValue = ($value === null) ? 'NULL' : "$value";
+        $sqlValue = ($value === null) ? 'NULL' : "'$value'";
 
         if ($secondValue !== null)  return "$column BETWEEN $sqlValue AND $secondValue"; 
 
