@@ -16,8 +16,8 @@ trait WhereClause {
 
     public function where(
         string $column,
-        int|string|null|bool $value,
         string $comparison = '=',
+        int|string|null|bool $value,
         int|string|null|bool $secondValue = null,
     ) {
         $this->where = Query::buildCondition($column, $value, $comparison, $secondValue);
@@ -26,8 +26,8 @@ trait WhereClause {
 
     public function andWhere(
         string $column,
-        int|string|null|bool $value,
         string $comparison = '=',
+        int|string|null|bool $value,
         int|string|null|bool $secondValue = null,
         bool $not = false,
     ) {
@@ -40,8 +40,8 @@ trait WhereClause {
 
     public function orWhere(
         string $column,
-        int|string|null|bool $value,
         string $comparison = '=',
+        int|string|null|bool $value,
         int|string|null|bool $secondValue = null,
         bool $not = false,
     ) {

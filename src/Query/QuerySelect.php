@@ -17,7 +17,7 @@ class QuerySelect implements QueryStruct
 
     protected string $columns;
     protected string $table;
-    protected string $alias;
+    protected string|null $alias;
 
     public function __construct(array $columns)
     {
