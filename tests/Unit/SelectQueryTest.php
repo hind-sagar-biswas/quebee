@@ -55,8 +55,38 @@ final class SelectQueryTest extends TestCase
 
     public function test_select_query_with_conditions_build() {
         // Basic conditions 
-        $expected = "SELECT * FROM test WHERE name = 'clause' OR id > '45'";
-        $query = Query::select()->from('test')->where('name', '=', 'clause')->orWhere('id', 'gt', 45)->build();
+        $expected = "SELECT * FROM test WHERE id > '45'";
+        $query = Query::select()->from('test')->where('id', 'gt', 45)->build();
+        $this->assertSame($expected, $query);
+
+        // Basic conditions - OR
+        $expected = "SELECT * FROM test WHERE test_name = 'clause' OR id > '45'";
+        $query = Query::select()->from('test')->where('test_name', '=', 'clause')->orWhere('id', 'gt', 45)->build();
+
+        // Basic conditions - AND
+        $expected = "SELECT * FROM test WHERE test_name = 'clause' AND id > '45'";
+        $query = Query::select()->from('test')->where('test_name', '=', 'clause')->andWhere('id', 'gt', 45)->build();
+        $this->assertSame($expected, $query);
+
+        // Basic conditions - LIKE
+        $expected = "SELECT * FROM test WHERE test_name LIKE '%clause%'";
+        $query = Query::select()->from('test')->where('test_name', '??', '%clause%')->build();
+        $this->assertSame($expected, $query);
+
+        // Full Condition clause
+        $expected = "SELECT * FROM test WHERE test_name LIKE '%clause%' OR id > '45' AND passed = '1'";
+        $query = Query::select()->from('test')
+            ->where('test_name', '??', '%clause%')
+            ->orWhere('id', 'gt', 45)
+            ->andWhere('passed', '=', 1)
+            ->build();
+        $this->assertSame($expected, $query);
+
+        // Full Condition - vias Clause
+        $expected = "SELECT * FROM test WHERE test_name LIKE '%clause%' OR id > '45' AND passed = '1'";
+        $query = Query::select()->from('test')
+            ->whereClause("test_name LIKE '%clause%' OR id > '45' AND passed = '1'")
+            ->build();
         $this->assertSame($expected, $query);
     }
 }
