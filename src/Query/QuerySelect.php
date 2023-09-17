@@ -56,6 +56,6 @@ class QuerySelect implements QueryStruct
         if (!empty($this->order)) $query .= ' ORDER BY ' . implode(', ', $this->order);
         if ($this->limit) $query .= ' LIMIT ' . $this->limit;
 
-        return $query;
+        return $query . ';';
     }
 }
