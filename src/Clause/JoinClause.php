@@ -24,6 +24,12 @@ trait JoinClause
         return $this;
     }
 
+    public function fullJoin(string $table, string $alias, string $joinOnCondition)
+    {
+        $this->joins[] = ['type' => 'FULL', 'table' => $table, 'alias' => $alias, 'condition' => $joinOnCondition];
+        return $this;
+    }
+
     public function joinClause(): string {
         $clause = '';
         foreach ($this->joins as $join) {
