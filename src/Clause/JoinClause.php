@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Hindbiswas\QueBee\Clause;
 
 trait JoinClause
@@ -30,7 +32,8 @@ trait JoinClause
         return $this;
     }
 
-    public function joinClause(): string {
+    public function joinClause(): string
+    {
         $clause = '';
         foreach ($this->joins as $join) {
             $clause .= ' ' . $join['type'] . ' JOIN ' . $join['table'] . ' AS ' . $join['alias'] . ' ON ' . $join['condition'];

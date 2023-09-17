@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Hindbiswas\QueBee\Query;
 
-interface QueryStruct {
+interface QueryStruct
+{
     public function build(): string;
 }

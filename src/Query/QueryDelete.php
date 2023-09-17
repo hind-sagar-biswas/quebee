@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Hindbiswas\QueBee\Query;
 
 use Hindbiswas\QueBee\Clause\WhereClause;
@@ -9,11 +11,13 @@ class QueryDelete implements QueryStruct
 {
     use WhereClause;
 
-    public function __construct(private string $from) {}
+    public function __construct(private string $from)
+    {
+    }
 
     public function build(): string
     {
         $whereClause = ($this->where) ? "WHERE " . $this->where : "";
-        return trim("DELETE FROM $this->from $whereClause");
+        return trim("DELETE FROM $this->from $whereClause;");
     }
 }
