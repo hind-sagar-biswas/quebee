@@ -5,7 +5,7 @@ use Hindbiswas\QueBee\Query;
 use PHPUnit\Framework\TestCase;
 
 final class SelectQueryTest extends TestCase
-{
+{   
     public function test_basic_select_query_build() {
         // For select ALL
         $expected = 'SELECT * FROM test';
@@ -30,12 +30,14 @@ final class SelectQueryTest extends TestCase
         $this->assertSame($expected, $query);
     }
 
+    
     public function test_ordered_select_query_build() {
         $expected = 'SELECT * FROM test ORDER BY class ASC, id DESC';
         $query = Query::select()->from('test')->orderBy('class')->orderBy('id', 'desc')->build();
         $this->assertSame($expected, $query);
     }
 
+    
     public function test_select_query_with_limit_build() {
         // For default limit
         $expected = 'SELECT * FROM test LIMIT 0, 50';
@@ -53,6 +55,7 @@ final class SelectQueryTest extends TestCase
         $this->assertSame($expected, $query);
     }
 
+    
     public function test_select_query_with_conditions_build() {
         // Basic conditions 
         $expected = "SELECT * FROM test WHERE id > '45'";
@@ -90,6 +93,7 @@ final class SelectQueryTest extends TestCase
         $this->assertSame($expected, $query);
     }
 
+    
     public function test_select_query_with_joins_build()
     {
         // Basic - INNER JOIN
