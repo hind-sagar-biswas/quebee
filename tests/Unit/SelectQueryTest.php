@@ -89,4 +89,28 @@ final class SelectQueryTest extends TestCase
             ->build();
         $this->assertSame($expected, $query);
     }
+
+    public function test_select_query_with_joins_build()
+    {
+        // Basic - INNER JOIN
+        $expected = "SELECT * FROM users AS u INNER JOIN tests AS t ON u.id = t.user_id";
+        $query = Query::select()->from('users', 'u')->join('tests', 't', 'u.id = t.user_id')->build();
+        $this->assertSame($expected, $query);
+        
+        // Basic - LEFT JOIN
+        $expected = "SELECT * FROM users AS u LEFT JOIN tests AS t ON u.id = t.user_id";
+        $query = Query::select()->from('users', 'u')->leftJoin('tests', 't', 'u.id = t.user_id')->build();
+        $this->assertSame($expected, $query);
+        
+        // Basic - RIGHT JOIN
+        $expected = "SELECT * FROM users AS u RIGHT JOIN tests AS t ON u.id = t.user_id";
+        $query = Query::select()->from('users', 'u')->rightJoin('tests', 't', 'u.id = t.user_id')->build();
+        $this->assertSame($expected, $query);
+
+        // Basic - FULL JOIN
+        $expected = "SELECT * FROM users AS u FULL JOIN tests AS t ON u.id = t.user_id";
+        $query = Query::select()->from('users', 'u')->fullJoin('tests', 't', 'u.id = t.user_id')->build();
+        $this->assertSame($expected, $query);
+
+    }
 }
