@@ -40,7 +40,7 @@ class QuerySelect implements QueryStruct
 
     public function build(): string
     {
-        $query = 'SELECT * FROM ' . $this->table;
+        $query = 'SELECT ' . $this->columns . ' FROM ' . $this->table;
 
         if ($this->alias) {
             $query .= ' AS ' . $this->alias;
