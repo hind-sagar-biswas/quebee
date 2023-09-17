@@ -33,6 +33,28 @@ final class SelectQueryTest extends TestCase
         
         $this->assertSame($expected, $query);
     }
+    
+    public function test_select_query_with_unaliased_columns_build() {
+        $expected = "SELECT id, name, email FROM test";
+
+        $cols = [
+            'id', 'name', 'email'
+        ];
+        $query = Query::select($cols)->from('test')->build();
+        
+        $this->assertSame($expected, $query);
+    }
+    
+    public function test_select_query_with_aliased_columns_build() {
+        $expected = "SELECT user_id AS id, name AS user, email AS email FROM test";
+
+        $aliased_cols = [
+            'id' => 'user_id', 'user' => 'name', 'email' => 'email'
+        ];
+        $query = Query::select($aliased_cols)->from('test')->build();
+        
+        $this->assertSame($expected, $query);
+    }
 
     public function test_full_select_query_build() {
         $expected = 'SELECT * FROM test';
