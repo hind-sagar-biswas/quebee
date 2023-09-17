@@ -123,15 +123,35 @@ final class SelectQueryTest extends TestCase
 
         // Full - use all joins
         $expected = "SELECT e.employee_name, d.department_name, p.project_name, c.customer_name FROM employees AS e LEFT JOIN departments AS d ON e.department_id = d.department_id INNER JOIN projects AS p ON e.employee_id = p.employee_id RIGHT JOIN customers AS c ON e.customer_id = c.customer_id;";
-        $query = Query::select([
-            'e.employee_name',
-            'd.department_name',
-            'p.project_name',
-            'c.customer_name',
-        ])->from('employees', 'e')
+        $cols = ['e.employee_name', 'd.department_name', 'p.project_name', 'c.customer_name',];
+        $query = Query::select($cols)->from('employees', 'e')
             ->leftJoin('departments', 'd', 'e.department_id = d.department_id')
             ->join('projects', 'p', 'e.employee_id = p.employee_id')
             ->rightJoin('customers', 'c', 'e.customer_id = c.customer_id')
+            ->build();
+        $this->assertSame($expected, $query);
+    }
+
+
+    public function test_full_select_query_build()
+    {
+        // For select ALL
+        $expected = "SELECT e.employee_name AS employee, d.department_name AS department, p.project_name AS project, c.customer_name AS customer FROM employees AS e LEFT JOIN departments AS d ON e.department_id = d.department_id INNER JOIN projects AS p ON e.employee_id = p.employee_id RIGHT JOIN customers AS c ON e.customer_id = c.customer_id WHERE e.employee_name LIKE '%clause%' OR d.id > '45' AND p.passed = '1' ORDER BY p.class ASC, c.id DESC LIMIT 10, 30;";
+        $cols = [
+            'employee' => 'e.employee_name',
+            'department' => 'd.department_name',
+            'project' => 'p.project_name',
+            'customer' => 'c.customer_name',
+        ];
+        $query = Query::select($cols)->from('employees', 'e')
+            ->leftJoin('departments', 'd', 'e.department_id = d.department_id')
+            ->join('projects', 'p', 'e.employee_id = p.employee_id')
+            ->rightJoin('customers', 'c', 'e.customer_id = c.customer_id')
+            ->where('e.employee_name', '??', '%clause%')
+            ->orWhere('d.id', 'gt', 45)
+            ->andWhere('p.passed', '=', 1)
+            ->orderBy('p.class')->orderBy('c.id', 'desc')
+            ->limit(30, 10)
             ->build();
         $this->assertSame($expected, $query);
     }
