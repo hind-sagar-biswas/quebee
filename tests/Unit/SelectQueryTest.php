@@ -115,6 +115,15 @@ final class SelectQueryTest extends TestCase
         $expected = "SELECT * FROM users AS u FULL JOIN tests AS t ON u.id = t.user_id";
         $query = Query::select()->from('users', 'u')->fullJoin('tests', 't', 'u.id = t.user_id')->build();
         $this->assertSame($expected, $query);
+    }
 
+    public function test_select_query_empty_table_name_throws_exception() {
+        $this->expectException(InvalidArgumentException::class);
+        Query::select()->from('')->build();
+    }
+
+    public function test_select_query_no_table_name_throws_exception() {
+        $this->expectException(Error::class);
+        Query::select()->build();
     }
 }

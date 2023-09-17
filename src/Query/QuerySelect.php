@@ -41,7 +41,7 @@ class QuerySelect implements QueryStruct
     public function build(): string
     {
         if (!$this->table || empty($this->table)) {
-            throw new \InvalidArgumentException("Method 'from()' must be called before 'build()'");
+            throw new \InvalidArgumentException("Table name cannot be null or empty");
         }
 
         $query = 'SELECT ' . $this->columns . ' FROM ' . $this->table;
