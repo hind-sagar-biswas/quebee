@@ -1,4 +1,4 @@
 composer.phar
 /vendor/
 *.cache
-local_test.php
+/temp/
