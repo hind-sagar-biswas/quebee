@@ -26,7 +26,7 @@ class QueryInsert implements QueryStruct
                 foreach ($data as $d) {
                     if (!is_array($d)) throw new \InvalidArgumentException('Data must be an array of arrays.');
                     if (empty($d)) throw new \InvalidArgumentException('Data array must not contain empty array.');
-                    if (!array_is_list($d)) throw new \InvalidArgumentException('Data must be an array of assoc arrays.');
+                    if (array_is_list($d)) throw new \InvalidArgumentException('Data must be an array of assoc arrays.');
                 }
             }
         }
@@ -34,7 +34,7 @@ class QueryInsert implements QueryStruct
         // If not multiple or switched from multiple
         if (!$this->multiple) {
             if (!is_array($data)) throw new \InvalidArgumentException('Data must be an array of arrays.');
-            if (!array_is_list($data)) throw new \InvalidArgumentException('Data must be an associative array.');
+            if (array_is_list($data)) throw new \InvalidArgumentException('Data must be an associative array.');
         }
 
         $this->data = $data;
@@ -42,25 +42,25 @@ class QueryInsert implements QueryStruct
 
     public function into(string $table): self
     {
-        $this->$table = $table;
+        $this->table = $table;
         return $this;
     }
 
     public function build(): string
     {
-        $sql = 'INSERT';
+        $sql = 'INSERT INTO ';
         
         if ($this->multiple) {
             $columns = array_keys($this->data[0]);
             $values = array_map(function ($d) { return  Query::flattenForValues($d); }, $this->data);
 
-            $sql .= ' INTO '. $this->table . '('. implode(', ', $columns). ') VALUES ';
+            $sql .= $this->table . '('. implode(', ', $columns). ') VALUES ';
             $sql .= implode(', ', $values) . ';';
         } else {
             $columns = array_keys($this->data);
             $values = Query::flattenForValues($this->data);
 
-            $sql.='INTO '. $this->table. '('. implode(', ', $columns). ') VALUES ' . $values . ';';
+            $sql.= $this->table . '('. implode(', ', $columns). ') VALUES ' . $values . ';';
         }
         return $sql;
     }
