@@ -10,8 +10,10 @@ trait DefaultValue
 {
     protected string|null $default = null;
 
-    public function default(DefaultVal|string $default): self
+    public function default(DefaultVal|string|null $default): self
     {
+        if ($default === null) $default = DefaultVal::NULL;
+        
         if (is_string($default)) {
             $this->default = "'$default'";
             return $this;
