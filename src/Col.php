@@ -8,6 +8,7 @@ use Hindbiswas\QueBee\Table\Column\Date;
 use Hindbiswas\QueBee\Table\Column\Text;
 use Hindbiswas\QueBee\Table\Column\Integer;
 use Hindbiswas\QueBee\Table\Column\Varchar;
+use Hindbiswas\QueBee\Table\Column\DateTimeType;
 
 class Col
 {
@@ -26,5 +27,9 @@ class Col
     public static function date(): Date
     {
         return new Date();
+    }
+    public static function dateTime(): DateTimeType
+    {
+        return new DateTimeType();
     }
 }
