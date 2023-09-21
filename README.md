@@ -17,8 +17,7 @@
 
 ![Project Language](https://img.shields.io/static/v1?label=language&message=php&color=purple)
 ![Project Type](https://img.shields.io/static/v1?label=type&message=library&color=red)
-![Current Version](https://img.shields.io/static/v1?label=current-version&message=v0.0.4&color=lightgrey)
-![Stable Version](https://img.shields.io/static/v1?label=stable-version&message=null&color=brightgreen)
+![Stable Version](https://img.shields.io/static/v1?label=stable-version&message=v1.0.0&color=brightgreen)
 ![Maintained](https://img.shields.io/static/v1?label=maintained&message=yes&color=red)
 ![License](https://img.shields.io/static/v1?label=license&message=MIT&color=orange)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
@@ -53,7 +52,7 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'path/to' . '/vendor/autoload.php';
 
 QueBee provides classes for building `SELECT`, `INSERT`, `UPDATE`, and `DELETE` SQL queries. `CREATE TABLE` is coming soon. Below are examples of how to use each query builder.
 
-### 1. `SELECT` Query
+### 1. SELECT Query
 
 To create a `SELECT` query, use the `Query::select()` method:
 
@@ -100,7 +99,7 @@ $query = Query::insert($data)
 // INSERT INTO table (column1, column2) VALUES ('value1', 'value2');
 ```
 
-### 3. `UPDATE` Queries
+### 3. UPDATE Queries
 
 To create an `UPDATE` query, use the `Query::update()` method:
 
@@ -118,7 +117,7 @@ $query = Query::update('table')
 // UPDATE table SET column1 = 'new_value1', column2 = 'new_value2' WHERE column1 = 'value1';
 ```
 
-### 4. `DELETE` Queries
+### 4. DELETE Queries
 
 To create a `DELETE` query, use the `Query::delete()` method:
 
