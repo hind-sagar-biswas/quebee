@@ -25,4 +25,22 @@ final class StringColumnTest extends TestCase
         $query = Col::varchar(200)->default('default value')->build('column');
         $this->assertSame($expected, $query);
     }
+
+    public function test_text_column_build() {
+        /// Basic TEXT column
+        $expected = "`column` TEXT NOT NULL";
+        $query = Col::text()->build('column');
+        $this->assertSame($expected, $query);
+        
+        // Nullable VARCHAR column with default NULL
+        $expected = "`column` TEXT NULL DEFAULT NULL";
+        $query = Col::text()->nullable()->default(DefaultVal::NULL)->build('column');
+        $this->assertSame($expected, $query);
+        
+        
+        // Basic VARCHAR column with default string
+        $expected = "`column` TEXT NOT NULL DEFAULT 'default value'";
+        $query = Col::text()->default('default value')->build('column');
+        $this->assertSame($expected, $query);
+    }
 }
