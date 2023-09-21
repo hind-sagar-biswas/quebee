@@ -19,4 +19,6 @@ trait DefaultValue
         
         return $this;
     }
+
+    public function defaultValue(): string|null { return $this->default; }
 }

@@ -10,13 +10,17 @@ trait Constraint
 
     public function unique(): self
     {
-        $this->constraint = 'unique';
+        $this->constraint = 'UNIQUE';
         return $this;
     }
 
     public function primary(): self
     {
-        $this->constraint = 'primary';
+        $this->constraint = 'PRIMARY KEY';
         return $this;
+    }
+
+    public function getConstraints(): string|null {
+        return $this->constraint;
     }
 }
