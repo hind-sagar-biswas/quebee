@@ -42,7 +42,7 @@ composer require hindbiswas/quebee
 
 ### 2. Autoloading
 
-Ensure that Composer's autoloader is included in your project's PHP files. 
+Ensure that Composer's autoloader is included in your project's PHP files.
 Use your path in place of `path/to/`:
 
 ```php
@@ -67,7 +67,7 @@ $query = Query::select($aliased_cols)->from('table')->build();
 // SELECT column1 AS alias1, column2 AS alias2, column3 AS column3 FROM table;
 ```
 
-Or, 
+Or,
 
 ```php
 use Hindbiswas\QueBee\Query;
