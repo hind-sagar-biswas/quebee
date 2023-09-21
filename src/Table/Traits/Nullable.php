@@ -6,7 +6,7 @@ namespace Hindbiswas\QueBee\Table\Traits;
 
 trait Nullable
 {
-    protected $nullable = false;
+    protected bool $nullable = false;
 
     public function nullable(): self {
         $this->nullable = true;
