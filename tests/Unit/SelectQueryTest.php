@@ -2,11 +2,13 @@
 
 declare(strict_types=1);
 
-use Hindbiswas\QueBee\Query;
+use Hindbiswas\QueBee\Query;  // Include the Query namespace
 use PHPUnit\Framework\TestCase;
 
+// PHPUnit test class for testing the SELECT query builder
 final class SelectQueryTest extends TestCase
 {
+    // Test method to ensure basic SELECT queries are built correctly
     public function test_basic_select_query_build()
     {
         // For select ALL
@@ -32,7 +34,7 @@ final class SelectQueryTest extends TestCase
         $this->assertSame($expected, $query);
     }
 
-
+    // Test method to ensure ordered SELECT queries are built correctly
     public function test_ordered_select_query_build()
     {
         $expected = 'SELECT * FROM test ORDER BY class ASC, id DESC;';
@@ -40,7 +42,7 @@ final class SelectQueryTest extends TestCase
         $this->assertSame($expected, $query);
     }
 
-
+    // Test method to ensure SELECT queries with LIMIT clauses are built correctly
     public function test_select_query_with_limit_build()
     {
         // For default limit
@@ -59,7 +61,7 @@ final class SelectQueryTest extends TestCase
         $this->assertSame($expected, $query);
     }
 
-
+    // Test method to ensure SELECT queries with WHERE and JOIN clauses are built correctly
     public function test_select_query_with_conditions_build()
     {
         // Basic conditions 
@@ -90,7 +92,7 @@ final class SelectQueryTest extends TestCase
             ->build();
         $this->assertSame($expected, $query);
 
-        // Full Condition - vias Clause
+        // Full Condition - via Clause
         $expected = "SELECT * FROM test WHERE test_name LIKE '%clause%' OR id > '45' AND passed = '1';";
         $query = Query::select()->from('test')
             ->whereClause("test_name LIKE '%clause%' OR id > '45' AND passed = '1'")
@@ -98,7 +100,7 @@ final class SelectQueryTest extends TestCase
         $this->assertSame($expected, $query);
     }
 
-
+    // Test method to ensure SELECT queries with JOIN clauses are built correctly
     public function test_select_query_with_joins_build()
     {
         // Basic - INNER JOIN
@@ -132,7 +134,7 @@ final class SelectQueryTest extends TestCase
         $this->assertSame($expected, $query);
     }
 
-
+    // Test method to ensure a full SELECT query with all clauses is built correctly
     public function test_full_select_query_build()
     {
         // For select ALL
@@ -156,14 +158,14 @@ final class SelectQueryTest extends TestCase
         $this->assertSame($expected, $query);
     }
 
-
+    // Test method to ensure an exception is thrown when the table name is empty
     public function test_select_query_empty_table_name_throws_exception()
     {
         $this->expectException(InvalidArgumentException::class);
         Query::select()->from('')->build();
     }
 
-
+    // Test method to ensure an exception is thrown when no table name is provided
     public function test_select_query_no_table_name_throws_exception()
     {
         $this->expectException(Error::class);

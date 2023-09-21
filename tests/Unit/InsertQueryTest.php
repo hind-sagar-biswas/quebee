@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-use Hindbiswas\QueBee\Query;
+use Hindbiswas\QueBee\Query;  // Include the Query namespace
 use PHPUnit\Framework\TestCase;
 
+// PHPUnit test class for testing the INSERT query builder
 final class InsertQueryTest extends TestCase
 {
     private array $data =
@@ -21,7 +22,7 @@ final class InsertQueryTest extends TestCase
         ]
     ];
 
-
+    // Test method to ensure a single INSERT query is built correctly
     public function test_single_insert_query_build()
     {
         // For single insert
@@ -31,6 +32,7 @@ final class InsertQueryTest extends TestCase
         $this->assertSame($expected, $query);
     }
 
+    // Test method to ensure a multiple INSERT query is built correctly
     public function test_multiple_insert_query_build()
     {
         // For normal insertMultiple
@@ -45,28 +47,28 @@ final class InsertQueryTest extends TestCase
         $this->assertSame($expected, $query);
     }
 
-
+    // Test method to ensure an exception is thrown when trying to insert empty data
     public function test_empty_data_insert_exception()
     {
         $this->expectException(InvalidArgumentException::class);
         Query::insert([])->into('users')->build();
     }
 
-
+    // Test method to ensure an exception is thrown when trying to insert non-associative data
     public function test_data_non_assoc_insert_exception()
     {
         $this->expectException(InvalidArgumentException::class);
         Query::insert([1, 2, 3])->into('users')->build();
     }
 
-
+    // Test method to ensure an exception is thrown when trying to insert empty data in multiple insert
     public function test_empty_data_multiple_insert_single_exception()
     {
         $this->expectException(InvalidArgumentException::class);
         Query::insert([['name' => 'John'], [], ['name' => 'Jane']])->into('users')->build();
     }
 
-
+    // Test method to ensure an exception is thrown when trying to insert non-associative data in multiple insert
     public function test_multiple_data_non_assoc_insert_single_exception()
     {
         $this->expectException(InvalidArgumentException::class);
