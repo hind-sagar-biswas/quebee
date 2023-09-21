@@ -1,5 +1,5 @@
 {
-    "name": "hindbiswas/que_bee",
+    "name": "hindbiswas/quebee",
     "description": "Qb - a lightweight Query Builder for SQL",
     "type": "library",
     "require-dev": {
