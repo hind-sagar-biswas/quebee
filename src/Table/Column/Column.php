@@ -14,11 +14,13 @@ class Column implements ColumnInterface
     use DefaultValue;
     use Constraint;
 
+    protected string|null $attribute = null;
     protected string $type;
 
     public function build(string $name): string
     {
-        $sql = "`$name` " . $this->type . " " . $this->nullValue();
+        $sql = "`$name` " . $this->type . " ";
+        $sql .= ($this->attribute) ? $this->attribute . " " . $this->nullValue() : $this->nullValue();
         if ($this->defaultValue()) $sql .= " DEFAULT " . $this->defaultValue();
         return $sql;
     }

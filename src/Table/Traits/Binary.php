@@ -6,13 +6,9 @@ namespace Hindbiswas\QueBee\Table\Traits;
 
 trait Binary
 {
-    protected $binary = false;
     public function binary(): self
     {
-        if (!$this->binary) {
-            $this->binary = true;
-            $this->type .= ' BINARY';
-        }
+        $this->attribute = 'BINARY';
         return $this;
     }
 }
