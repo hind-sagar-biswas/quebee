@@ -1,11 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Hindbiswas\QueBee\Clause;
 
-trait LimitClause {
-    private string $limit = '';
+trait LimitClause
+{
+    protected string $limit = '';
 
-    public function limit(int $limit = 50, int $offset = 0)
+    // Set the LIMIT and OFFSET for the query
+    public function limit(int $limit = 50, int $offset = 0): self
     {
         $this->limit = "$offset, $limit";
         return $this;
