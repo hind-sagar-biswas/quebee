@@ -13,12 +13,16 @@ final class StringColumnTest extends TestCase
         $expected = "`column` VARCHAR(255) NOT NULL";
         $query = Col::varchar()->build('column');
         $this->assertSame($expected, $query);
+
+        /// Binary VARCHAR column
+        $expected = "`column` VARCHAR(255) BINARY NOT NULL";
+        $query = Col::varchar()->binary()->build('column');
+        $this->assertSame($expected, $query);
         
         // Nullable VARCHAR column with default NULL
         $expected = "`column` VARCHAR(255) NULL DEFAULT NULL";
         $query = Col::varchar()->nullable()->default(DefaultVal::NULL)->build('column');
         $this->assertSame($expected, $query);
-        
         
         // Basic VARCHAR column with default string
         $expected = "`column` VARCHAR(200) NOT NULL DEFAULT 'default value'";
