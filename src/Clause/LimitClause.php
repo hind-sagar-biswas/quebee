@@ -6,7 +6,7 @@ namespace Hindbiswas\QueBee\Clause;
 
 trait LimitClause
 {
-    private string $limit = '';
+    protected string $limit = '';
 
     public function limit(int $limit = 50, int $offset = 0)
     {

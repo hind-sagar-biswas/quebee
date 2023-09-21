@@ -6,7 +6,7 @@ namespace Hindbiswas\QueBee\Clause;
 
 trait OrderClause
 {
-    private array $order = [];
+    protected array $order = [];
 
     public function orderBy(string $column, string $direction = 'asc'): self
     {

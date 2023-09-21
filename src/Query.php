@@ -24,9 +24,9 @@ class Query
     {
         return new QueryInsert($data, true);
     }
-    public static function update(array|string $data): QueryUpdate
+    public static function update(string $table): QueryUpdate
     {
-        return new QueryUpdate($data);
+        return new QueryUpdate($table);
     }
     public static function delete(string $table): QueryDelete
     {
@@ -39,10 +39,20 @@ class Query
         return implode(', ', $data);
     }
 
+    public static function flattenByEqual(array $data): string
+    {
+        $parsed_data = array_map(
+            fn (string $k, $d): string => ($d === null) ? "$k = NULL" : "$k = '$d'",
+            array_keys($data),
+            array_values($data)
+        );
+        return implode(', ', $parsed_data);
+    }
+
     public static function flattenForValues(array|string $data): string
     {
         if (!is_array($data)) return $data;
-        $parsed_data = array_map(function ($d) { return "'" . $d . "'"; }, $data);
+        $parsed_data = array_map(fn (string $d): string => ($d === null) ? 'NULL' : "'$d'", $data);
         return '(' . implode(', ', $parsed_data) . ')';
     }
 
@@ -56,8 +66,7 @@ class Query
         int|string|null|bool $value,
         string $comparison = '=',
         int|string|null|bool $secondValue = null
-    ): string
-    {
+    ): string {
         $sqlValue = ($value === null) ? 'NULL' : "'$value'";
 
         if ($secondValue !== null)  return "$column BETWEEN $sqlValue AND $secondValue";
