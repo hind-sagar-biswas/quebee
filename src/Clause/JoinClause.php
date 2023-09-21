@@ -8,31 +8,31 @@ trait JoinClause
 {
     protected $joins = [];
 
-    public function join(string $table, string $alias, string $joinOnCondition)
+    public function join(string $table, string $alias, string $joinOnCondition): self
     {
         $this->joins[] = ['type' => 'INNER', 'table' => $table, 'alias' => $alias, 'condition' => $joinOnCondition];
         return $this;
     }
 
-    public function leftJoin(string $table, string $alias, string $joinOnCondition)
+    public function leftJoin(string $table, string $alias, string $joinOnCondition): self
     {
         $this->joins[] = ['type' => 'LEFT', 'table' => $table, 'alias' => $alias, 'condition' => $joinOnCondition];
         return $this;
     }
 
-    public function rightJoin(string $table, string $alias, string $joinOnCondition)
+    public function rightJoin(string $table, string $alias, string $joinOnCondition): self
     {
         $this->joins[] = ['type' => 'RIGHT', 'table' => $table, 'alias' => $alias, 'condition' => $joinOnCondition];
         return $this;
     }
 
-    public function fullJoin(string $table, string $alias, string $joinOnCondition)
+    public function fullJoin(string $table, string $alias, string $joinOnCondition): self
     {
         $this->joins[] = ['type' => 'FULL', 'table' => $table, 'alias' => $alias, 'condition' => $joinOnCondition];
         return $this;
     }
 
-    public function joinClause(): string
+    protected function joinClause(): string
     {
         $clause = '';
         foreach ($this->joins as $join) {

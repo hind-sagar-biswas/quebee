@@ -33,7 +33,7 @@ class QuerySelect implements QueryStruct
         $this->columns = implode(', ', $columns);
     }
 
-    public function from($table, $alias = null)
+    public function from($table, $alias = null): self
     {
         $this->table = $table;
         $this->alias = $alias;

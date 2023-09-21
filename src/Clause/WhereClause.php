@@ -11,7 +11,7 @@ trait WhereClause
 {
     protected null|string $where = null;
 
-    public function whereClause(string $condition)
+    public function whereClause(string $condition): self
     {
         if ($this->where) $this->where .= Query::parseCondition($condition);
         else $this->where = Query::parseCondition($condition);
@@ -23,7 +23,7 @@ trait WhereClause
         string $comparison = '=',
         int|string|null|bool $value,
         int|string|null|bool $secondValue = null,
-    ) {
+    ): self {
         $this->where = Query::buildCondition($column, $value, $comparison, $secondValue);
         return $this;
     }
@@ -34,7 +34,7 @@ trait WhereClause
         int|string|null|bool $value,
         int|string|null|bool $secondValue = null,
         bool $not = false,
-    ) {
+    ): self {
         if ($this->where === null) return $this->where($column, $value, $comparison, $secondValue);
 
         $initial = ($not) ? ' AND NOT ' : ' AND ';
@@ -48,7 +48,7 @@ trait WhereClause
         int|string|null|bool $value,
         int|string|null|bool $secondValue = null,
         bool $not = false,
-    ) {
+    ): self {
         if ($this->where === null) return $this->where($column, $value, $comparison, $secondValue);
 
         $initial = ($not) ? ' OR NOT ' : ' OR ';
@@ -56,21 +56,21 @@ trait WhereClause
         return $this;
     }
 
-    public function whereExists(QueryStruct $query)
+    public function whereExists(QueryStruct $query): self
     {
         if ($this->where !== null) return $this->andWhereExists($query);
         $this->where = ' EXISTS (' . $query->build() . ')';
         return $this;
     }
 
-    public function andWhereExists(QueryStruct $query)
+    public function andWhereExists(QueryStruct $query): self
     {
         if ($this->where === null) return $this->whereExists($query);
         $this->where .= ' AND EXISTS (' . $query->build() . ')';
         return $this;
     }
 
-    public function orWhereExists(QueryStruct $query)
+    public function orWhereExists(QueryStruct $query): self
     {
         if ($this->where === null) return $this->whereExists($query);
         $this->where .= ' OR EXISTS (' . $query->build() . ')';
