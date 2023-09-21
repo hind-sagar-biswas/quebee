@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Hindbiswas\QueBee\Query;
 
 use Hindbiswas\QueBee\Clause\JoinClause;
@@ -40,7 +42,11 @@ class QuerySelect implements QueryStruct
 
     public function build(): string
     {
-        $query = 'SELECT * FROM ' . $this->table;
+        if (!$this->table || empty($this->table)) {
+            throw new \InvalidArgumentException("Table name cannot be null or empty");
+        }
+
+        $query = 'SELECT ' . $this->columns . ' FROM ' . $this->table;
 
         if ($this->alias) {
             $query .= ' AS ' . $this->alias;
@@ -52,6 +58,6 @@ class QuerySelect implements QueryStruct
         if (!empty($this->order)) $query .= ' ORDER BY ' . implode(', ', $this->order);
         if ($this->limit) $query .= ' LIMIT ' . $this->limit;
 
-        return $query;
+        return $query . ';';
     }
 }

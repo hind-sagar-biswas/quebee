@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Hindbiswas\QueBee\Clause;
 
-trait OrderClause {
+trait OrderClause
+{
     private array $order = [];
 
     public function orderBy(string $column, string $direction = 'asc'): self
