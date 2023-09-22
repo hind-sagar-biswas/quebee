@@ -8,7 +8,7 @@ trait Unsigned
 {
     public function unsigned(bool $zerofill = false): self
     {
-        $this->attribute = 'UNSINED';
+        $this->attribute = 'UNSIGNED';
         if ($zerofill) $this->attribute .= ' ZEROFILL';
         return $this;
     }
