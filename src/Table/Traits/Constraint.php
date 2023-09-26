@@ -20,6 +20,12 @@ trait Constraint
         return $this;
     }
 
+    public function pk(): self
+    {
+        $this->constraint = 'PRIMARY KEY';
+        return $this;
+    }
+
     public function getConstraints(): string|null {
         return $this->constraint;
     }
