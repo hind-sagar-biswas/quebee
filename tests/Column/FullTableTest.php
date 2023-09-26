@@ -53,4 +53,79 @@ final class FullTableTest extends TestCase
 
         $this->assertSame($expected, $query);
     }
+
+    public function test_table_with_foreign_keys_column_does_not_exist_on_base_exception()
+    {
+        $this->expectException(Exception::class);
+
+        $user = Table::create('users')->columns([
+            'id' => Col::integer(11)->unsigned()->pk()->ai(),
+            'username' => Col::varchar()->unique(),
+            'email' => Col::varchar()->unique(),
+            'password' => Col::varchar(),
+            'is_superadmin' => Col::integer(2)->default('0'),
+            'create_time' => Col::dateTime()->default(DefaultVal::CURRENT_TIME),
+            'update_time' => Col::dateTime()->setOnUpdate()->default(DefaultVal::CURRENT_TIME),
+        ]);
+
+        $table = Table::create('tokens')->columns([
+            'id' => Col::integer()->unsigned()->pk()->ai(),
+            'selector' => Col::varchar(),
+            'hashed_validator' => Col::varchar(),
+            'user_id' => Col::integer(11)->unsigned(),
+            'expiry' => Col::dateTime(),
+        ])->foreign('user')->onDelete(FK::CASCADE)->reference($user, 'id');
+
+        $query = $table->build();
+    }
+
+    public function test_table_with_foreign_keys_column_does_not_exist_on_target_exception()
+    {
+        $this->expectException(Exception::class);
+
+        $user = Table::create('users')->columns([
+            'id' => Col::integer(11)->unsigned()->pk()->ai(),
+            'username' => Col::varchar()->unique(),
+            'email' => Col::varchar()->unique(),
+            'password' => Col::varchar(),
+            'is_superadmin' => Col::integer(2)->default('0'),
+            'create_time' => Col::dateTime()->default(DefaultVal::CURRENT_TIME),
+            'update_time' => Col::dateTime()->setOnUpdate()->default(DefaultVal::CURRENT_TIME),
+        ]);
+
+        $table = Table::create('tokens')->columns([
+            'id' => Col::integer()->unsigned()->pk()->ai(),
+            'selector' => Col::varchar(),
+            'hashed_validator' => Col::varchar(),
+            'user_id' => Col::integer(11)->unsigned(),
+            'expiry' => Col::dateTime(),
+        ])->foreign('user_id')->onDelete(FK::CASCADE)->reference($user, 'user_id');
+
+        $query = $table->build();
+    }
+
+    public function test_table_with_foreign_keys_column_incompitable_for_type_exception()
+    {
+        $this->expectException(Exception::class);
+
+        $user = Table::create('users')->columns([
+            'id' => Col::integer(11)->unsigned()->pk()->ai(),
+            'username' => Col::varchar()->unique(),
+            'email' => Col::varchar()->unique(),
+            'password' => Col::varchar(),
+            'is_superadmin' => Col::integer(2)->default('0'),
+            'create_time' => Col::dateTime()->default(DefaultVal::CURRENT_TIME),
+            'update_time' => Col::dateTime()->setOnUpdate()->default(DefaultVal::CURRENT_TIME),
+        ]);
+
+        $table = Table::create('tokens')->columns([
+            'id' => Col::integer()->unsigned()->pk()->ai(),
+            'selector' => Col::varchar(),
+            'hashed_validator' => Col::varchar(),
+            'user_id' => Col::integer(11)->unsigned(),
+            'expiry' => Col::dateTime(),
+        ])->foreign('user_id')->onDelete(FK::CASCADE)->reference($user, 'email');
+
+        $query = $table->build();
+    }
 }
