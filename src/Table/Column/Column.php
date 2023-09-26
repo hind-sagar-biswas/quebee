@@ -26,4 +26,14 @@ class Column implements ColumnInterface
         if (strpos($this->type, 'INT') !== false && $this->ai) $sql .= " AUTO_INCREMENT";
         return $sql;
     }
+
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    public function getAttribute(): string|null
+    {
+        return $this->attribute;
+    }
 }
