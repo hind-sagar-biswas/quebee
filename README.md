@@ -50,7 +50,7 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'path/to' . '/vendor/autoload.php';
 
 ## Usage
 
-QueBee provides classes for building `SELECT`, `INSERT`, `UPDATE`, and `DELETE` SQL queries. `CREATE TABLE` is coming soon. Below are examples of how to use each query builder.
+QueBee provides classes for building `SELECT`, `INSERT`, `UPDATE`, `DELETE`  and `CREATE TABLE` SQL queries. Below are examples of how to use each query builder.
 
 ### 1. SELECT Query
 
@@ -120,6 +120,13 @@ $query = Query::update('table')
 ### 4. DELETE Queries
 
 To create a `DELETE` query, use the `Query::delete()` method:
+
+```php
+$query = Query::delete('table')->where('column1', '=', 1)->build()
+
+// Resulting SQL query
+// DELETE FROM table WHERE column1 = '1';
+```
 
 ## Best Practices
 
