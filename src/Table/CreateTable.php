@@ -29,13 +29,13 @@ class CreateTable
         return new ForeignHandler($this, $baseColumn);
     }
 
-    public function addForeignKey(string $name, string $base, string $targetCol, string $targetTable, FK|null $onDelete = null, FK|null $onUpdate = null): self
+    public function addForeignKey(string $base, string $targetCol, string $targetTable, FK|null $onDelete = null, FK|null $onUpdate = null): self
     {
-        $key = "FOREIGN KEY ($base) REFERENCES $targetTable ($targetCol)";
+        $key = "FOREIGN KEY ($base) REFERENCES $targetTable($targetCol)";
         if ($onDelete) $key .= " ON DELETE " . $onDelete->name;
         if ($onUpdate) $key .= " ON UPDATE " . $onUpdate->name;
 
-        $this->foreignList[$name] = $key;
+        $this->foreignList[] = $key;
         return $this;
     }
 
@@ -74,6 +74,10 @@ class CreateTable
             $keyName = $columnName . "_UC";
             $constraintStr = "CONSTRAINT $keyName UNIQUE (`" . $columnName . "`)";
             $columns[] = $constraintStr;
+        }
+
+        foreach ($this->foreignList as $query) {
+            $columns[] = $query;
         }
 
         $sql = "CREATE TABLE IF NOT EXISTS $this->name (" . implode(', ', $columns) . ") ENGINE = InnoDB;";

@@ -21,7 +21,7 @@ class ForeignHandler
         ];
     }
 
-    public function to(CreateTable $targetTable, string $targetColumn): CreateTable
+    public function reference(CreateTable $targetTable, string $targetColumn): CreateTable
     {
         if (!$targetTable->hasColumn($targetColumn)) throw new \InvalidArgumentException("`$targetColumn` is not a column of `$targetTable->name` table.");
 
@@ -34,7 +34,6 @@ class ForeignHandler
         if ($compatibility !== true) throw $compatibility;
 
         return $this->baseTable->addForeignKey(
-            name: $this->baseColumn['name'] . "_" . $targetColumn . "_FOREIGN_KEY",
             base: $this->baseColumn['name'],
             targetCol: $targetColumn,
             targetTable: $targetTable->name,
