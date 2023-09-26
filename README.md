@@ -1,23 +1,23 @@
 # QueBee: A PHP SQL Query Builder
 
 ```
-            ██████╗░██╗░░░██╗███████╗                               ...vvvv)))))).
-            █╔═══██╗██║░░░██║██╔════╝    /~~\               ,,,c(((((((((((((((((/
-            █║██╗██║██║░░░██║█████╗░░   /~~c \.         .vv)))))))))))))))))))\``
-            ██████╔╝██║░░░██║██╔══╝░░       G_G__   ,,(((KKKK//////////////'
-            ╚═██╔═╝░╚██████╔╝███████╗     ,Z~__ '@,gW@@AKXX~MW,gmmmz==m_.
-            ░░╚═╝░░░░╚═════╝░╚══════╝    iP,dW@!,A@@@@@@@@@@@@@@@A` ,W@@A\c
-            █████╗░███████╗███████╗       ]b_.__zf !P~@@@@@*P~b.~+=m@@@*~ g@Ws.
+            ██████╗ ██╗   ██╗███████╗                               ...vvvv)))))).
+            █╔═══██╗██║   ██║██╔════╝    /~~\               ,,,c(((((((((((((((((/
+            █║██╗██║██║   ██║█████╗     /~~c \.         .vv)))))))))))))))))))\``
+            ██████╔╝██║   ██║██╔══╝         G_G__   ,,(((KKKK//////////////'
+            ╚═██╔═╝ ╚██████╔╝███████╗     ,Z~__ '@,gW@@AKXX~MW,gmmmz==m_.
+              ╚═╝    ╚═════╝ ╚══════╝    iP,dW@!,A@@@@@@@@@@@@@@@A` ,W@@A\c
+            █████╗ ███████╗███████╗       ]b_.__zf !P~@@@@@*P~b.~+=m@@@*~ g@Ws.
             █╔══██╗██╔════╝██╔════╝          ~`    ,2W2m. '\[ ['~~c'M7 _gW@@A`'s
-            █████╦╝█████╗░░█████╗░░            v=XX)====Y-  [ [    \c/*@@@*~ g@@i
-            █╔══██╗██╔══╝░░██╔══╝░░           /v~           !.!.     '\c7+sg@@@@@s.
+            █████╦╝█████╗  █████╗              v=XX)====Y-  [ [    \c/*@@@*~ g@@i
+            █╔══██╗██╔══╝  ██╔══╝             /v~           !.!.     '\c7+sg@@@@@s.
             █████╦╝███████╗███████╗          //              'c'c       '\c7*X7~~~~
-            ═════╝░╚══════╝╚══════╝         ]/                 ~=Xm_       '~=(Gm_.
+            ═════╝ ╚══════╝╚══════╝         ]/                 ~=Xm_       '~=(Gm_.
 ```
 
 ![Project Language](https://img.shields.io/static/v1?label=language&message=php&color=purple)
 ![Project Type](https://img.shields.io/static/v1?label=type&message=library&color=red)
-![Stable Version](https://img.shields.io/static/v1?label=stable-version&message=v1.0.0&color=brightgreen)
+![Stable Version](https://img.shields.io/static/v1?label=stable-version&message=v1.1.0&color=brightgreen)
 ![Maintained](https://img.shields.io/static/v1?label=maintained&message=yes&color=red)
 ![License](https://img.shields.io/static/v1?label=license&message=MIT&color=orange)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
@@ -50,7 +50,7 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'path/to' . '/vendor/autoload.php';
 
 ## Usage
 
-QueBee provides classes for building `SELECT`, `INSERT`, `UPDATE`, and `DELETE` SQL queries. `CREATE TABLE` is coming soon. Below are examples of how to use each query builder.
+QueBee provides classes for building `SELECT`, `INSERT`, `UPDATE`, `DELETE`  and `CREATE TABLE` SQL queries. Below are examples of how to use each query builder.
 
 ### 1. SELECT Query
 
@@ -120,6 +120,64 @@ $query = Query::update('table')
 ### 4. DELETE Queries
 
 To create a `DELETE` query, use the `Query::delete()` method:
+
+```php
+$query = Query::delete('table')->where('column1', '=', 1)->build()
+
+// Resulting SQL query
+// DELETE FROM table WHERE column1 = '1';
+```
+
+### 5. CREATE TABLE Queries
+
+*[**NB** Currently table builder supports columns of `INT`, `TEXT`, `VARCHAR`, `DATE`, `DATETIME` datatypes!]*
+
+To create a `CREATE TABLE` query, use the `Table::create()` method:
+
+#### Without Any Foreign Keys
+
+```php
+use Hindbiswas\QueBee\Col;
+use Hindbiswas\QueBee\Table;
+use Hindbiswas\QueBee\Table\Values\DefaultVal;
+
+$usersTable = Table::create('users')->columns([
+    'id' => Col::integer(11)->unsigned()->pk()->ai(),
+    'username' => Col::varchar()->unique(),
+    'email' => Col::varchar()->unique(),
+    'password' => Col::varchar(),
+    'is_superadmin' => Col::integer(2)->default('0'),
+    'create_time' => Col::dateTime()->default(DefaultVal::CURRENT_TIME),
+    'update_time' => Col::dateTime()->setOnUpdate()->default(DefaultVal::CURRENT_TIME),
+]);
+
+$query = $usersTable->build();
+
+// Resulting SQL query
+// CREATE TABLE IF NOT EXISTS users (`id` INT(11) UNSIGNED NULL AUTO_INCREMENT, `username` VARCHAR(255) NOT NULL, `email` VARCHAR(255) NOT NULL, `password` VARCHAR(255) NOT NULL, `is_superadmin` INT(2) NOT NULL DEFAULT '0', `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIME, `update_time` DATETIME on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIME, CONSTRAINT users_PK PRIMARY KEY (id), CONSTRAINT username_UC UNIQUE (`username`), CONSTRAINT email_UC UNIQUE (`email`)) ENGINE = InnoDB;
+```
+
+#### With Foreign Keys
+
+```php
+use Hindbiswas\QueBee\Col;
+use Hindbiswas\QueBee\Table;
+use Hindbiswas\QueBee\Table\Values\DefaultVal;
+use Hindbiswas\QueBee\Table\Values\FK;
+
+// $usersTable = create a table to constrain with
+
+$table = Table::create('tokens')->columns([
+    'id' => Col::integer()->unsigned()->pk()->ai(),
+    'selector' => Col::varchar(),
+    'hashed_validator' => Col::varchar(),
+    'user_id' => Col::integer(11)->unsigned(),
+    'expiry' => Col::dateTime(),
+])->foreign('user_id')->onDelete(FK::CASCADE)->reference($usersTable, 'id');
+
+// Resulting SQL query
+// CREATE TABLE IF NOT EXISTS tokens (`id` INT UNSIGNED NULL AUTO_INCREMENT, `selector` VARCHAR(255) NOT NULL, `hashed_validator` VARCHAR(255) NOT NULL, `user_id` INT(11) UNSIGNED NOT NULL, `expiry` DATETIME NOT NULL, CONSTRAINT tokens_PK PRIMARY KEY (id), FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE) ENGINE = InnoDB;
+```
 
 ## Best Practices
 
