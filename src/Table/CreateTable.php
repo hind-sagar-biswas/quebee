@@ -66,6 +66,16 @@ class CreateTable
         return $this->columnList[$columnName]; // Get a column definition.
     }
 
+    public function get_pk(): string
+    {
+        return $this->constraints['PRIMARY KEY'][0];
+    }
+
+    public function get_all_pk(): array
+    {
+        return $this->constraints['PRIMARY KEY'];
+    }
+
     public function build(): string
     {
         $columns = [];
