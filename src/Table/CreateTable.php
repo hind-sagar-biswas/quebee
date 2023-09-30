@@ -10,6 +10,7 @@ use Hindbiswas\QueBee\Table\Values\FK;
 class CreateTable
 {
     protected array $columnList; // Stores column definitions.
+    protected array $columns; // Stores column definitions.
     protected array $constraints = [
         'UNIQUE' => [],         // Stores UNIQUE constraints.
         'PRIMARY KEY' => [],    // Stores PRIMARY KEY constraints.
@@ -27,6 +28,18 @@ class CreateTable
             throw new \InvalidArgumentException("Columns must be an associative array");
         }
         $this->columnList = $columns; // Set the column definitions.
+
+        $this->columns = [];
+
+        foreach ($this->columnList as $columnName => $columnObject) {
+            if ($columnObject instanceof ColumnInterface) {
+                $columnConstraints = $columnObject->getConstraints();
+                if (!empty($columnConstraints)) {
+                    $this->constraints[$columnConstraints][] = $columnName;
+                }
+                $this->columns[] = $columnObject->build($columnName); // Build column SQL.
+            }
+        }
         return $this;
     }
 
@@ -78,35 +91,25 @@ class CreateTable
 
     public function build(): string
     {
-        $columns = [];
-
-        foreach ($this->columnList as $columnName => $columnObject) {
-            if ($columnObject instanceof ColumnInterface) {
-                $columnConstraints = $columnObject->getConstraints();
-                if (!empty($columnConstraints)) {
-                    $this->constraints[$columnConstraints][] = $columnName;
-                }
-                $columns[] = $columnObject->build($columnName); // Build column SQL.
-            }
-        }
+        
 
         foreach ($this->constraints['PRIMARY KEY'] as $columnName) {
             $keyName = $this->name . "_PK";
             $constraintStr = "CONSTRAINT $keyName PRIMARY KEY (" . implode(', ', $this->constraints['PRIMARY KEY']) . ")";
-            $columns[] = $constraintStr; // Add PRIMARY KEY constraint to columns.
+            $this->columns[] = $constraintStr; // Add PRIMARY KEY constraint to columns.
         }
 
         foreach ($this->constraints['UNIQUE'] as $columnName) {
             $keyName = $columnName . "_UC";
             $constraintStr = "CONSTRAINT $keyName UNIQUE (`$columnName`)";
-            $columns[] = $constraintStr; // Add UNIQUE constraint to columns.
+            $this->columns[] = $constraintStr; // Add UNIQUE constraint to columns.
         }
 
         foreach ($this->foreignList as $query) {
-            $columns[] = $query; // Add FOREIGN KEY constraints to columns.
+            $this->columns[] = $query; // Add FOREIGN KEY constraints to columns.
         }
 
-        $sql = "CREATE TABLE IF NOT EXISTS $this->name (" . implode(', ', $columns) . ") ENGINE = InnoDB;"; // Build CREATE TABLE SQL.
+        $sql = "CREATE TABLE IF NOT EXISTS $this->name (" . implode(', ', $this->columns) . ") ENGINE = InnoDB;"; // Build CREATE TABLE SQL.
 
         return $sql;
     }
