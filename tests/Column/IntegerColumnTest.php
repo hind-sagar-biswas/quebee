@@ -8,6 +8,24 @@ use PHPUnit\Framework\TestCase;
 
 final class IntegerColumnTest extends TestCase
 {
+    public function test_bit_column_build()
+    {
+        /// Basic BIT column
+        $expected = "`column` BIT NOT NULL";
+        $query = Col::bit()->build('column');
+        $this->assertSame($expected, $query);
+
+        /// length specified BIT column
+        $expected = "`column` BIT(11) NOT NULL";
+        $query = Col::bit(11)->build('column');
+        $this->assertSame($expected, $query);
+
+        /// Nullable BIT column with default NULL
+        $expected = "`column` BIT NULL DEFAULT NULL";
+        $query = Col::bit()->nullable()->default(DefaultVal::NULL)->build('column');
+        $this->assertSame($expected, $query);
+    }
+
     public function test_integer_column_build()
     {
         /// Basic INT column
