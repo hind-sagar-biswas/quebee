@@ -17,7 +17,7 @@
 
 ![Project Language](https://img.shields.io/static/v1?label=language&message=php&color=purple)
 ![Project Type](https://img.shields.io/static/v1?label=type&message=library&color=red)
-![Stable Version](https://img.shields.io/static/v1?label=stable-version&message=v1.1.0&color=brightgreen)
+![Stable Version](https://img.shields.io/static/v1?label=stable-version&message=v1.2.0&color=brightgreen)
 ![Maintained](https://img.shields.io/static/v1?label=maintained&message=yes&color=red)
 ![License](https://img.shields.io/static/v1?label=license&message=MIT&color=orange)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)

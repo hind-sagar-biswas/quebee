@@ -8,7 +8,7 @@ use Hindbiswas\QueBee\Table\Traits\AutoIncrement;
 use Hindbiswas\QueBee\Table\Traits\Unsigned;
 use Hindbiswas\QueBee\Table\Traits\Zerofill;
 
-class Integer extends Column
+class SmallInt extends Column
 {
     use Zerofill;
     use Unsigned;
@@ -16,6 +16,6 @@ class Integer extends Column
 
     public function __construct(public readonly int|null $length = null)
     {
-        $this->type = ($length) ? "INT($length)" : "INT";
+        $this->type = ($length) ? "SMALLINT($length)" : "SMALLINT";
     }
 }
