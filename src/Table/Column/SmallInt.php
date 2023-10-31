@@ -6,9 +6,11 @@ namespace Hindbiswas\QueBee\Table\Column;
 
 use Hindbiswas\QueBee\Table\Traits\AutoIncrement;
 use Hindbiswas\QueBee\Table\Traits\Unsigned;
+use Hindbiswas\QueBee\Table\Traits\Zerofill;
 
 class SmallInt extends Column
 {
+    use Zerofill;
     use Unsigned;
     use AutoIncrement;
 

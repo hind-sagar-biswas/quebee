@@ -6,10 +6,10 @@ namespace Hindbiswas\QueBee\Table\Traits;
 
 trait Unsigned
 {
-    public function unsigned(bool $zerofill = false): self
+    public function unsigned(): self
     {
-        $this->attribute = 'UNSIGNED';
-        if ($zerofill) $this->attribute .= ' ZEROFILL';
+        if ($this->attribute) $this->attribute .= ' UNSIGNED';
+        else $this->attribute = 'UNSIGNED';
         return $this;
     }
 }
