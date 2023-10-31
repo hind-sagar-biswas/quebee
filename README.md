@@ -5,19 +5,20 @@
             ██╔═══██╗██║   ██║██╔════╝    /~~\               ,,,c(((((((((((((((((/
             ██║██╗██║██║   ██║█████╗     /~~c \.         .vv)))))))))))))))))))\``
             ███████╔╝██║   ██║██╔══╝         G_G__   ,,(((KKKK//////////////'
-            ╚═██╔═╝ ╚██████╔╝███████╗     ,Z~__ '@,gW@@AKXX~MW,gmmmz==m_.
-              ╚═╝    ╚═════╝ ╚══════╝    iP,dW@!,A@@@@@@@@@@@@@@@A` ,W@@A\c
+             ╚═██╔═╝ ╚██████╔╝███████╗     ,Z~__ '@,gW@@AKXX~MW,gmmmz==m_.
+               ╚═╝    ╚═════╝ ╚══════╝    iP,dW@!,A@@@@@@@@@@@@@@@A` ,W@@A\c
             ██████╗ ███████╗███████╗       ]b_.__zf !P~@@@@@*P~b.~+=m@@@*~ g@Ws.
             ██╔══██╗██╔════╝██╔════╝          ~`    ,2W2m. '\[ ['~~c'M7 _gW@@A`'s
             ██████╦╝█████╗  █████╗              v=XX)====Y-  [ [    \c/*@@@*~ g@@i
             ██╔══██╗██╔══╝  ██╔══╝             /v~           !.!.     '\c7+sg@@@@@s.
             ██████╦╝███████╗███████╗          //              'c'c       '\c7*X7~~~~
-            ═════╝ ╚══════╝╚══════╝         ]/                 ~=Xm_       '~=(Gm_.
+            ╚═════╝ ╚══════╝╚══════╝         ]/                 ~=Xm_       '~=(Gm_.
 ```
 
 ![Project Language](https://img.shields.io/static/v1?label=language&message=php&color=purple)
 ![Project Type](https://img.shields.io/static/v1?label=type&message=library&color=red)
-![Stable Version](https://img.shields.io/static/v1?label=stable-version&message=v1.2.0&color=brightgreen)
+![Stable Version](https://img.shields.io/static/v1?label=stable-version&message=v1.1.0&color=brightgreen)
+![Latest Version](https://img.shields.io/static/v1?label=latest-version&message=v1.2.0&color=yellow)
 ![Maintained](https://img.shields.io/static/v1?label=maintained&message=yes&color=red)
 ![License](https://img.shields.io/static/v1?label=license&message=MIT&color=orange)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
@@ -130,8 +131,6 @@ $query = Query::delete('table')->where('column1', '=', 1)->build()
 
 ### 5. CREATE TABLE Queries
 
-*[**NB** Currently table builder supports columns of `INT`, `TEXT`, `VARCHAR`, `DATE`, `DATETIME` datatypes!]*
-
 To create a `CREATE TABLE` query, use the `Table::create()` method:
 
 #### Without Any Foreign Keys
@@ -178,6 +177,26 @@ $table = Table::create('tokens')->columns([
 // Resulting SQL query
 // CREATE TABLE IF NOT EXISTS tokens (`id` INT UNSIGNED NULL AUTO_INCREMENT, `selector` VARCHAR(255) NOT NULL, `hashed_validator` VARCHAR(255) NOT NULL, `user_id` INT(11) UNSIGNED NOT NULL, `expiry` DATETIME NOT NULL, CONSTRAINT tokens_PK PRIMARY KEY (id), FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE) ENGINE = InnoDB;
 ```
+
+#### Available Data Types as of `v1.2.0`
+
+- String
+  - TEXT => `Col::text()`
+  - VARCHAR => `Col::varchar(225)`
+- Numeric
+  - BIT => `Col::bit()`
+  - INT => `Col::integer()`
+  - BIGINT => `Col::bigInt()`
+  - MEDIUMINT => `Col::mediumInt()`
+  - SMALLINT => `Col::smallInt()`
+  - TINYINT => `Col::tinyInt()`
+  - DECIMAL => `Col::decimal(11, 6)`
+  - FLOAT => `Col::float(6, 2)`
+  - DOUBLE => `Col::double(11, 6)`
+  - REAL => `Col::real(11, 6)`
+- Time
+  - DATE => `Col::date()`
+  - DATETIME => `Col::dateTime()`
 
 ## Best Practices
 
