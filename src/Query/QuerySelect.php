@@ -43,35 +43,34 @@ class QuerySelect implements QueryStruct
     }
 
     // Build and return the SQL query string
-    public function build(): string
-{
-    // Check if the table name is not null or empty
-    if (!$this->table || empty($this->table)) {
-        throw new \InvalidArgumentException("Table name cannot be null or empty");
+    public function build(bool $semi_colon = true): string
+    {
+        // Check if the table name is not null or empty
+        if (!$this->table || empty($this->table)) {
+            throw new \InvalidArgumentException("Table name cannot be null or empty");
+        }
+
+        // Initialize the query string with the SELECT clause and specified columns
+        $query = 'SELECT ' . $this->columns . ' FROM ' . $this->table;
+
+        // Add an optional table alias to the query
+        if ($this->alias) {
+            $query .= ' AS ' . $this->alias;
+        }
+
+        // Add any JOIN clauses to the query
+        $query .= $this->joinClause();
+
+        // Add a WHERE clause to the query if it's defined
+        if ($this->where) $query .= ' WHERE ' . $this->where;
+
+        // Add an ORDER BY clause to the query if sorting is specified
+        if (!empty($this->order)) $query .= ' ORDER BY ' . implode(', ', $this->order);
+
+        // Add a LIMIT clause to the query if it's specified
+        if ($this->limit) $query .= ' LIMIT ' . $this->limit;
+
+        // Append a semicolon to the query to complete it
+        return ($semi_colon) ? $query . ';' : $query;
     }
-
-    // Initialize the query string with the SELECT clause and specified columns
-    $query = 'SELECT ' . $this->columns . ' FROM ' . $this->table;
-
-    // Add an optional table alias to the query
-    if ($this->alias) {
-        $query .= ' AS ' . $this->alias;
-    }
-
-    // Add any JOIN clauses to the query
-    $query .= $this->joinClause();
-
-    // Add a WHERE clause to the query if it's defined
-    if ($this->where) $query .= ' WHERE ' . $this->where;
-
-    // Add an ORDER BY clause to the query if sorting is specified
-    if (!empty($this->order)) $query .= ' ORDER BY ' . implode(', ', $this->order);
-
-    // Add a LIMIT clause to the query if it's specified
-    if ($this->limit) $query .= ' LIMIT ' . $this->limit;
-
-    // Append a semicolon to the query to complete it
-    return $query . ';';
-}
-
 }
