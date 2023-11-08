@@ -33,6 +33,11 @@ final class IntegerColumnTest extends TestCase
         $query = Col::integer()->build('column');
         $this->assertSame($expected, $query);
 
+        /// Basic INT column
+        $expected = "`column` INT NOT NULL AUTO_INCREMENT";
+        $query = Col::integer()->ai()->build('column');
+        $this->assertSame($expected, $query);
+
         /// length specified zerofill INT column
         $expected = "`column` INT(11) ZEROFILL NOT NULL";
         $query = Col::integer(11)->zerofill()->build('column');

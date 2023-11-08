@@ -9,7 +9,6 @@ trait AutoIncrement
     public function ai(): self
     {
         $this->ai = true;
-        $this->nullable();
         return $this;
     }
 }
