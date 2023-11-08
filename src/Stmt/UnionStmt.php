@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Hindbiswas\QueBee\Query;
+namespace Hindbiswas\QueBee\Stmt;
 
-use Hindbiswas\QueBee\Query\QueryStruct;
+use Hindbiswas\QueBee\Stmt\StmtStruct;
+use Hindbiswas\QueBee\Query\QuerySelect;
 
-class QueryUnion implements QueryStruct
+class UnionStmt implements StmtStruct
 {
     private array $select_queries = [];
-
 
     public function __construct(public readonly bool $union_all = false, QuerySelect ...$select_queries)
     {
