@@ -7,6 +7,7 @@ namespace Hindbiswas\QueBee;
 use Hindbiswas\QueBee\Query\QueryDelete;
 use Hindbiswas\QueBee\Query\QueryInsert;
 use Hindbiswas\QueBee\Query\QuerySelect;
+use Hindbiswas\QueBee\Query\QueryUnion;
 use Hindbiswas\QueBee\Query\QueryUpdate;
 
 class Query
@@ -16,6 +17,18 @@ class Query
     {
         if (empty($columns)) return new QuerySelect(['*']);
         return new QuerySelect($columns);
+    }
+
+    // Create and return a new UNION query
+    public static function union(QuerySelect ...$select_queries): QueryUnion
+    {
+        return new QueryUnion(false, ...$select_queries);
+    }
+
+    // Create and return a new UNION ALL query
+    public static function unionAll(QuerySelect ...$select_queries): QueryUnion
+    {
+        return new QueryUnion(true, ...$select_queries);
     }
 
     // Create and return a new INSERT query
