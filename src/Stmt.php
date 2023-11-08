@@ -6,6 +6,7 @@ namespace Hindbiswas\QueBee;
 
 use Hindbiswas\QueBee\Stmt\UnionStmt;
 use Hindbiswas\QueBee\Query\QuerySelect;
+use Hindbiswas\QueBee\Stmt\CubeStmt;
 
 class Stmt
 {
@@ -17,5 +18,10 @@ class Stmt
     public static function unionAll(QuerySelect ...$select_queries): UnionStmt
     {
         return new UnionStmt(true, ...$select_queries);
+    }
+    
+    public static function cube(array $columns): CubeStmt
+    {
+        return new CubeStmt($columns);
     }
 }
