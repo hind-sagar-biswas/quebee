@@ -1,0 +1,29 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Hindbiswas\QueBee\Stmt;
+
+use Hindbiswas\QueBee\Stmt\StmtStruct;
+
+class CubeStmt implements StmtStruct
+{
+    protected string $columns;
+
+    public function __construct(array $columns)
+    {
+        if (!array_is_list($columns)) {
+            $columnStrings = [];
+            foreach ($columns as $alias => $columnName) {
+                $columnStrings[] = "$columnName AS $alias";
+            }
+            $columns = $columnStrings;
+        }
+        $this->columns = implode(', ', $columns);
+    }
+
+    public function build(): string
+    {
+        return "CUBE($this->columns)";
+    }
+}
