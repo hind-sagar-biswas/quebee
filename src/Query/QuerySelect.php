@@ -66,6 +66,14 @@ class QuerySelect implements QueryStruct
         // Add a WHERE clause to the query if it's defined
         if ($this->where) $query .= ' WHERE ' . $this->where;
 
+        // Add a GROUP BY clause to the query if it's defined
+        if ($this->group) {
+            $query .= ' GROUP BY ' . $this->group;
+
+            // Add a HAVING clause to the query if it's defined
+            if ($this->having) $query .= ' HAVING ' . $this->having;
+        }
+
         // Add an ORDER BY clause to the query if sorting is specified
         if (!empty($this->order)) $query .= ' ORDER BY ' . implode(', ', $this->order);
 

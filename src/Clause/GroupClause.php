@@ -37,7 +37,7 @@ trait GroupClause
     public function groupBy(array|GroupingSet|CubeStmt|Set $statements): self
     {
         if (is_array($statements)) $this->group = 'GROUP BY ' . implode(', ', $statements);
-        else $this->group = 'GROUP BY ' . $statements->build();
+        else $this->group = $statements->build();
         return $this;
     }
 
@@ -55,11 +55,10 @@ trait GroupClause
     ): self {
         if (!$this->group) throw new BadMethodCallException("Must Group columns before calling having");
         if ($this->having !== null) return $this->andHaving($aggregate_function, $comparison, $value);
-        $this->having = 'HAVING ' . Query::buildCondition($aggregate_function, $value, $comparison);
+        $this->having = Query::buildCondition($aggregate_function, $value, $comparison);
         return $this;
     }
 
-    // Add an AND WHERE clause
     public function andHaving(
         string $aggregate_function,
         int|string|null|bool $value,
@@ -73,7 +72,6 @@ trait GroupClause
         return $this;
     }
 
-    // Add an OR WHERE clause
     public function orHaving(
         string $aggregate_function,
         int|string|null|bool $value,
