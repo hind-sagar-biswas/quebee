@@ -95,7 +95,7 @@ class CreateTable
     {
         
 
-        foreach ($this->constraints['PRIMARY KEY'] as $columnName) {
+        if (!empty($this->constraints['PRIMARY KEY'])) {
             $keyName = $this->name . "_PK";
             $constraintStr = "CONSTRAINT $keyName PRIMARY KEY (" . implode(', ', $this->constraints['PRIMARY KEY']) . ")";
             $this->columns[] = $constraintStr; // Add PRIMARY KEY constraint to columns.

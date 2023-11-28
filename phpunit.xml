@@ -7,5 +7,8 @@
         <testsuite name="Column Tests">
             <directory>tests/Column</directory>
         </testsuite>
+        <testsuite name="Statements Tests">
+            <directory>tests/Stmt</directory>
+        </testsuite>
     </testsuites>
 </phpunit>

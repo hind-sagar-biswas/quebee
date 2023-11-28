@@ -55,7 +55,7 @@ final class FullTableTest extends TestCase
 
     public function test_table_with_foreign_keys_build()
     {
-        $expected = "CREATE TABLE IF NOT EXISTS tokens (`id` INT UNSIGNED NULL AUTO_INCREMENT, `selector` VARCHAR(255) NOT NULL, `hashed_validator` VARCHAR(255) NOT NULL, `user_id` INT(11) UNSIGNED NOT NULL, `expiry` DATETIME NOT NULL, CONSTRAINT tokens_PK PRIMARY KEY (id), FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE) ENGINE = InnoDB;";
+        $expected = "CREATE TABLE IF NOT EXISTS tokens (`id` INT UNSIGNED NOT NULL AUTO_INCREMENT, `selector` VARCHAR(255) NOT NULL, `hashed_validator` VARCHAR(255) NOT NULL, `user_id` INT(11) UNSIGNED NOT NULL, `expiry` DATETIME NOT NULL, CONSTRAINT tokens_PK PRIMARY KEY (id), FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE) ENGINE = InnoDB;";
 
         $user = Table::create('users')->columns([
             'id' => Col::integer(11)->unsigned()->ai()->pk(),
@@ -77,6 +77,19 @@ final class FullTableTest extends TestCase
 
         $query = $table->build();
 
+        $this->assertSame($expected, $query);
+    }
+
+    public function test_table_with_conjugate_pk_build()
+    {
+        $expected = "CREATE TABLE IF NOT EXISTS test (`id` INT NOT NULL, `name` VARCHAR(255) NOT NULL, CONSTRAINT test_PK PRIMARY KEY (id, name)) ENGINE = InnoDB;";
+
+        $table = Table::create('test')->columns([
+            'id' => Col::integer()->pk(),
+            'name' => Col::varchar()->pk(),
+        ]);
+
+        $query = $table->build();
         $this->assertSame($expected, $query);
     }
 

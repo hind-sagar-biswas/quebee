@@ -81,10 +81,6 @@ class Query
         string $comparison = '=',
         int|string|null|bool $secondValue = null
     ): string {
-        $sqlValue = ($value === null) ? 'NULL' : "'$value'";
-
-        if ($secondValue !== null)  return "$column BETWEEN $sqlValue AND $secondValue";
-
         $sqlComp = match ($comparison) {
             'gt', '>' => '>',
             'gte', '>=' => '>=',
@@ -95,6 +91,15 @@ class Query
             'ns', '<=>' => '<=>',
             'like', '??' => 'LIKE',
         };
+
+        if ($value === null) {
+            if ($sqlComp == '=') return "$column IS NULL";
+            else return "$column IS NOT NULL";
+        };
+
+        $sqlValue = (is_string($value)) ? "'$value'" : $value;
+        if ($secondValue !== null)  return "$column BETWEEN $sqlValue AND $secondValue";
+
 
         return "$column $sqlComp $sqlValue";
     }
