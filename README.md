@@ -17,11 +17,11 @@
 
 ![Project Language](https://img.shields.io/static/v1?label=language&message=php&color=purple)
 ![Project Type](https://img.shields.io/static/v1?label=type&message=library&color=red)
-![Stable Version](https://img.shields.io/static/v1?label=stable-version&message=v1.1.0&color=brightgreen)
-![Latest Version](https://img.shields.io/static/v1?label=latest-version&message=v1.2.0&color=yellow)
+![Stable Version](https://img.shields.io/static/v1?label=stable-version&message=v2.0.0&color=brightgreen)
+![Latest Version](https://img.shields.io/static/v1?label=latest-version&message=v2.0.0&color=yellow)
 ![Maintained](https://img.shields.io/static/v1?label=maintained&message=yes&color=red)
 ![License](https://img.shields.io/static/v1?label=license&message=MIT&color=orange)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/hind-sagar-biswas/quebee/pulls)
 
 ## Introduction
 
@@ -49,9 +49,20 @@ Use your path in place of `path/to/`:
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'path/to' . '/vendor/autoload.php';
 ```
 
+## Features
+
+QueBee provides following features to work with MySQL:
+
+1. **Queries:** `Query` class for `SELECT`, `INSERT`, `UPDATE`, and `DELETE` queries.
+2. **Table:** `Table` class for `CREATE TABLE` along with `Col` class for columns.
+3. **Columns:** `Col` class has a bunch of datatypes like `INT`, `VARCHAR`, `DATETIME` and many more for creating columns as per your requirements.
+4. **Statements:** `Stmt` class for `UNION`, `UNION ALL`, `CUBE`, `SET`, and `GROUPING SETS` statements.
+
+It also includes foreign key constraints, unique, primary key and indexing as well as grouping. See the `/tests/` directory for all possible ways of using the `QueBee`;
+
 ## Usage
 
-QueBee provides classes for building `SELECT`, `INSERT`, `UPDATE`, `DELETE`  and `CREATE TABLE` SQL queries. Below are examples of how to use each query builder.
+Below are examples of how to use each query builder.
 
 ### 1. SELECT Query
 
@@ -74,7 +85,7 @@ use Hindbiswas\QueBee\Query;
 
 $query = Query::select(['column1', 'column2'])
     ->from('table')
-    ->where('column1', '=', 'value')
+    ->where('column1', 'value')
     ->orderBy('column2', 'desc')
     ->limit(10)
     ->build();
@@ -82,6 +93,22 @@ $query = Query::select(['column1', 'column2'])
 // Resulting SQL query
 // SELECT column1, column2 FROM table WHERE column1 = 'value' ORDER BY column2 DESC LIMIT 0, 10;
 ```
+
+#### condition aliases for conditional statements
+
+| SQL | Literal | Symbolic |
+|----------|---------|---------|
+| `>`      | `gt`    | `>`     |
+| `>=`     | `gte`   | `>=`    |
+| `<`      | `lt`    | `<`     |
+| `<=`     | `lte`   | `<=`    |
+| `=`      | `eq`    | `==` or `=` |
+| `!=`     | `ne`    | `!=` or `<>` |
+| `<=>`    | `ns`    | `<=>`   |
+| `LIKE`   | `like`  | `??`    |
+
+You can use either Literal or Symbolic.
+
 
 ### 2. INSERT Queries
 
@@ -111,7 +138,7 @@ $data = ['column1' => 'new_value1', 'column2' => 'new_value2'];
 
 $query = Query::update('table')
     ->set($data)
-    ->where('column1', '=', 'value1')
+    ->where('column1', 'value1')
     ->build();
 
 // Resulting SQL query
@@ -123,10 +150,10 @@ $query = Query::update('table')
 To create a `DELETE` query, use the `Query::delete()` method:
 
 ```php
-$query = Query::delete('table')->where('column1', '=', 1)->build()
+$query = Query::delete('table')->where('column1', 1, 'gt')->build() // Here `gt` is alias for `>`
 
 // Resulting SQL query
-// DELETE FROM table WHERE column1 = '1';
+// DELETE FROM table WHERE column1 > '1';
 ```
 
 ### 5. CREATE TABLE Queries
