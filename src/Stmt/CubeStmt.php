@@ -10,7 +10,7 @@ class CubeStmt implements StmtStruct
 {
     protected string $columns;
 
-    public function __construct(array $columns)
+    public function __construct(string ...$columns)
     {
         if (!array_is_list($columns)) {
             $columnStrings = [];

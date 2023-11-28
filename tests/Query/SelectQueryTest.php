@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-use Hindbiswas\QueBee\Query;  // Include the Query namespace
+use Hindbiswas\QueBee\Stmt;
 use PHPUnit\Framework\TestCase;
+use Hindbiswas\QueBee\Query;  // Include the Query namespace
 
 // PHPUnit test class for testing the SELECT query builder
 final class SelectQueryTest extends TestCase
@@ -28,8 +29,8 @@ final class SelectQueryTest extends TestCase
         $this->assertSame($expected, $query);
 
         // For select specific columns with alias
-        $expected = "SELECT user_id AS id, name AS user, email AS email FROM test;";
-        $aliased_cols = ['id' => 'user_id', 'user' => 'name', 'email' => 'email'];
+        $expected = "SELECT user_id AS id, name AS user, email FROM test;";
+        $aliased_cols = ['id' => 'user_id', 'user' => 'name', 'email'];
         $query = Query::select($aliased_cols)->from('test')->build();
         $this->assertSame($expected, $query);
     }
@@ -65,16 +66,16 @@ final class SelectQueryTest extends TestCase
     public function test_select_query_with_conditions_build()
     {
         // Basic conditions 
-        $expected = "SELECT * FROM test WHERE id > '45';";
+        $expected = "SELECT * FROM test WHERE id > 45;";
         $query = Query::select()->from('test')->where('id', 'gt', 45)->build();
         $this->assertSame($expected, $query);
 
         // Basic conditions - OR
-        $expected = "SELECT * FROM test WHERE test_name = 'clause' OR id > '45';";
+        $expected = "SELECT * FROM test WHERE test_name = 'clause' OR id > 45;";
         $query = Query::select()->from('test')->where('test_name', '=', 'clause')->orWhere('id', 'gt', 45)->build();
 
         // Basic conditions - AND
-        $expected = "SELECT * FROM test WHERE test_name = 'clause' AND id > '45';";
+        $expected = "SELECT * FROM test WHERE test_name = 'clause' AND id > 45;";
         $query = Query::select()->from('test')->where('test_name', '=', 'clause')->andWhere('id', 'gt', 45)->build();
         $this->assertSame($expected, $query);
 
@@ -84,7 +85,7 @@ final class SelectQueryTest extends TestCase
         $this->assertSame($expected, $query);
 
         // Full Condition clause
-        $expected = "SELECT * FROM test WHERE test_name LIKE '%clause%' OR id > '45' AND passed = '1';";
+        $expected = "SELECT * FROM test WHERE test_name LIKE '%clause%' OR id > 45 AND passed = 1;";
         $query = Query::select()->from('test')
             ->where('test_name', '??', '%clause%')
             ->orWhere('id', 'gt', 45)
@@ -97,6 +98,30 @@ final class SelectQueryTest extends TestCase
         $query = Query::select()->from('test')
             ->whereClause("test_name LIKE '%clause%' OR id > '45' AND passed = '1'")
             ->build();
+        $this->assertSame($expected, $query);
+    }
+
+    // Test method to ensure SELECT queries with WHERE and JOIN clauses are built correctly
+    public function test_select_query_with_group_by_build()
+    {
+        // Without Having
+        $expected = "SELECT column1, column2, column3, SUM(column4) FROM table_name GROUP BY GROUPING SETS ((column1, column2), (column2, column3), (column1, column3), (column1, column2, column3), CUBE(column1, column2, column3)) ORDER BY column1 ASC, column2 ASC, column3 ASC;";
+        $query = Query::select(['column1', 'column2', 'column3', 'SUM(column4)'])->from('table_name')->groupBy(
+                Stmt::groupingSet(
+                    ['column1', 'column2'],
+                    Stmt::set('column2', 'column3'),
+                    Stmt::set('column1', 'column3'),
+                    Stmt::set('column1', 'column2', 'column3'),
+                    Stmt::cube('column1', 'column2', 'column3')
+                )
+            )->orderBy('column1')->orderBy('column2')->orderBy('column3')->build();
+        $this->assertSame($expected, $query);
+
+        // With Having
+        $expected = "SELECT department, AVG(salary) AS avg_salary FROM employees WHERE department IS NOT NULL GROUP BY department HAVING AVG(salary) > 5000 AND COUNT(employee) > 5;";
+        $query = Query::select(['department', 'avg_salary' => 'AVG(salary)'])
+            ->from('employees')->where('department', 'ne')
+            ->groupBy('department')->having('AVG(salary)', 5000, 'gt')->andHaving('COUNT(employee)', 5, 'gt')->build();
         $this->assertSame($expected, $query);
     }
 
@@ -138,7 +163,7 @@ final class SelectQueryTest extends TestCase
     public function test_full_select_query_build()
     {
         // For select ALL
-        $expected = "SELECT e.employee_name AS employee, d.department_name AS department, p.project_name AS project, c.customer_name AS customer FROM employees AS e LEFT JOIN departments AS d ON e.department_id = d.department_id INNER JOIN projects AS p ON e.employee_id = p.employee_id RIGHT JOIN customers AS c ON e.customer_id = c.customer_id WHERE e.employee_name LIKE '%clause%' OR d.id > '45' AND p.passed = '1' ORDER BY p.class ASC, c.id DESC LIMIT 10, 30;";
+        $expected = "SELECT e.employee_name AS employee, d.department_name AS department, p.project_name AS project, c.customer_name AS customer FROM employees AS e LEFT JOIN departments AS d ON e.department_id = d.department_id INNER JOIN projects AS p ON e.employee_id = p.employee_id RIGHT JOIN customers AS c ON e.customer_id = c.customer_id WHERE e.employee_name LIKE '%clause%' OR d.id > 45 AND p.passed = 1 ORDER BY p.class ASC, c.id DESC LIMIT 10, 30;";
         $cols = [
             'employee' => 'e.employee_name',
             'department' => 'd.department_name',

@@ -10,7 +10,7 @@ class Set implements StmtStruct
 {
     protected string $columns;
 
-    public function __construct(array $columns)
+    public function __construct(string ...$columns)
     {
         $this->columns = implode(', ', $columns);
     }

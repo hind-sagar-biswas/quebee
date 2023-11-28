@@ -34,9 +34,10 @@ trait GroupClause
     public ?string $group = null;
     public ?string $having = null;
 
-    public function groupBy(array|GroupingSet|CubeStmt|Set $statements): self
+    public function groupBy(string|array|GroupingSet|CubeStmt|Set $statements): self
     {
-        if (is_array($statements)) $this->group = 'GROUP BY ' . implode(', ', $statements);
+        if (is_array($statements)) $this->group = implode(', ', $statements);
+        elseif (is_string($statements)) $this->group = $statements;
         else $this->group = $statements->build();
         return $this;
     }
@@ -50,8 +51,8 @@ trait GroupClause
 
     public function having(
         string $aggregate_function,
-        string $comparison = '=',
         int|string|null|bool $value,
+        string $comparison = '=',
     ): self {
         if (!$this->group) throw new BadMethodCallException("Must Group columns before calling having");
         if ($this->having !== null) return $this->andHaving($aggregate_function, $comparison, $value);

@@ -22,14 +22,14 @@ class Stmt
         return new UnionStmt(true, ...$select_queries);
     }
     
-    public static function cube(array $columns): CubeStmt
+    public static function cube(string ...$columns): CubeStmt
     {
-        return new CubeStmt($columns);
+        return new CubeStmt(...$columns);
     }
     
-    public static function set(array $columns): Set
+    public static function set(string ...$columns): Set
     {
-        return new Set($columns);
+        return new Set(...$columns);
     }
     
     public static function groupingSet(array|Set|CubeStmt ...$columns): GroupingSet

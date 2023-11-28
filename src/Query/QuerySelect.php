@@ -29,7 +29,7 @@ class QuerySelect implements QueryStruct
         if (!array_is_list($columns)) {
             $columnStrings = [];
             foreach ($columns as $alias => $columnName) {
-                $columnStrings[] = "$columnName AS $alias";
+                $columnStrings[] = ($alias !== $columnName and !is_numeric($alias)) ? "$columnName AS $alias" : $columnName;
             }
             $columns = $columnStrings;
         }

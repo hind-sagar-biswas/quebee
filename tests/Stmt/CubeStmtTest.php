@@ -12,7 +12,7 @@ final class CubeStmtTest extends TestCase
     public function test_cube_stmt_build()
     {
         $expected = 'CUBE(column1, column2)';
-        $query = Stmt::cube(['column1', 'column2'])->build();
+        $query = Stmt::cube('column1', 'column2')->build();
         $this->assertSame($expected, $query);
     }
 }
