@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hindbiswas\QueBee\Query;
 
+use Hindbiswas\QueBee\Clause\GroupClause;
 use Hindbiswas\QueBee\Clause\JoinClause;
 use Hindbiswas\QueBee\Clause\LimitClause;
 use Hindbiswas\QueBee\Clause\OrderClause;
@@ -15,6 +16,7 @@ class QuerySelect implements QueryStruct
     use WhereClause;  // Include WHERE clause functionality
     use OrderClause;  // Include ORDER BY clause functionality
     use LimitClause;  // Include LIMIT clause functionality
+    use GroupClause;  // Include CROUP clause functionality
     use JoinClause;   // Include JOIN clause functionality
 
     protected string $columns;

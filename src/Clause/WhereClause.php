@@ -9,7 +9,7 @@ use Hindbiswas\QueBee\Query\QueryStruct;
 
 trait WhereClause
 {
-    protected null|string $where = null;
+    protected ?string $where = null;
 
     // Add a custom WHERE clause to the query
     public function whereClause(string $condition): self

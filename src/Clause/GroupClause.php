@@ -24,13 +24,15 @@ declare(strict_types=1);
 namespace Hindbiswas\QueBee\Clause;
 
 use BadMethodCallException;
+use Hindbiswas\QueBee\Query;
+use Hindbiswas\QueBee\Stmt\Set;
 use Hindbiswas\QueBee\Stmt\CubeStmt;
 use Hindbiswas\QueBee\Stmt\GroupingSet;
-use Hindbiswas\QueBee\Stmt\Set;
 
 trait GroupClause
 {
     public ?string $group = null;
+    public ?string $having = null;
 
     public function groupBy(array|GroupingSet|CubeStmt|Set $statements): self
     {
@@ -43,6 +45,45 @@ trait GroupClause
     {
         if (!$this->group) throw new BadMethodCallException("Must Group columns before calling rollup");
         else $this->group .= ' WITH ROLLUP';
+        return $this;
+    }
+
+    public function having(
+        string $aggregate_function,
+        string $comparison = '=',
+        int|string|null|bool $value,
+    ): self {
+        if (!$this->group) throw new BadMethodCallException("Must Group columns before calling having");
+        if ($this->having !== null) return $this->andHaving($aggregate_function, $comparison, $value);
+        $this->having = 'HAVING ' . Query::buildCondition($aggregate_function, $value, $comparison);
+        return $this;
+    }
+
+    // Add an AND WHERE clause
+    public function andHaving(
+        string $aggregate_function,
+        int|string|null|bool $value,
+        string $comparison = '=',
+        bool $not = false,
+        ): self {
+        if ($this->having === null) return $this->having($aggregate_function, $value, $comparison);
+
+        $initial = ($not) ? ' AND NOT ' : ' AND ';
+        $this->having .= $initial . Query::buildCondition($aggregate_function, $value, $comparison);
+        return $this;
+    }
+
+    // Add an OR WHERE clause
+    public function orHaving(
+        string $aggregate_function,
+        int|string|null|bool $value,
+        string $comparison = '=',
+        bool $not = false,
+    ): self {
+        if ($this->having === null) return $this->having($aggregate_function, $value, $comparison);
+
+        $initial = ($not) ? ' OR NOT ' : ' OR ';
+        $this->having .= $initial .  Query::buildCondition($aggregate_function, $value, $comparison);
         return $this;
     }
 }
