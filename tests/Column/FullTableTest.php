@@ -54,6 +54,19 @@ final class FullTableTest extends TestCase
         $this->assertSame($expected, $query);
     }
 
+    public function test_table_with_conjugate_pk_build()
+    {
+        $expected = "CREATE TABLE IF NOT EXISTS test (`id` INT NOT NULL, `name` VARCHAR(255) NOT NULL, CONSTRAINT test_PK PRIMARY KEY (id, name)) ENGINE = InnoDB;";
+
+        $table = Table::create('test')->columns([
+            'id' => Col::integer()->pk(),
+            'name' => Col::varchar()->pk(),
+        ]);
+
+        $query = $table->build();
+        $this->assertSame($expected, $query);
+    }
+
     public function test_table_with_foreign_keys_column_does_not_exist_on_base_exception()
     {
         $this->expectException(Exception::class);
