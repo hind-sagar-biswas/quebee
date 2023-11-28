@@ -67,29 +67,29 @@ final class SelectQueryTest extends TestCase
     {
         // Basic conditions 
         $expected = "SELECT * FROM test WHERE id > 45;";
-        $query = Query::select()->from('test')->where('id', 'gt', 45)->build();
+        $query = Query::select()->from('test')->where('id', 45, 'gt')->build();
         $this->assertSame($expected, $query);
 
         // Basic conditions - OR
         $expected = "SELECT * FROM test WHERE test_name = 'clause' OR id > 45;";
-        $query = Query::select()->from('test')->where('test_name', '=', 'clause')->orWhere('id', 'gt', 45)->build();
+        $query = Query::select()->from('test')->where('test_name', 'clause')->orWhere('id', 45, 'gt')->build();
 
         // Basic conditions - AND
         $expected = "SELECT * FROM test WHERE test_name = 'clause' AND id > 45;";
-        $query = Query::select()->from('test')->where('test_name', '=', 'clause')->andWhere('id', 'gt', 45)->build();
+        $query = Query::select()->from('test')->where('test_name', 'clause')->andWhere('id', 45, 'gt')->build();
         $this->assertSame($expected, $query);
 
         // Basic conditions - LIKE
         $expected = "SELECT * FROM test WHERE test_name LIKE '%clause%';";
-        $query = Query::select()->from('test')->where('test_name', '??', '%clause%')->build();
+        $query = Query::select()->from('test')->where('test_name', '%clause%', '??')->build();
         $this->assertSame($expected, $query);
 
         // Full Condition clause
         $expected = "SELECT * FROM test WHERE test_name LIKE '%clause%' OR id > 45 AND passed = 1;";
         $query = Query::select()->from('test')
-            ->where('test_name', '??', '%clause%')
-            ->orWhere('id', 'gt', 45)
-            ->andWhere('passed', '=', 1)
+            ->where('test_name', '%clause%', '??')
+            ->orWhere('id', 45, 'gt')
+            ->andWhere('passed', 1)
             ->build();
         $this->assertSame($expected, $query);
 
@@ -120,7 +120,7 @@ final class SelectQueryTest extends TestCase
         // With Having
         $expected = "SELECT department, AVG(salary) AS avg_salary FROM employees WHERE department IS NOT NULL GROUP BY department HAVING AVG(salary) > 5000 AND COUNT(employee) > 5;";
         $query = Query::select(['department', 'avg_salary' => 'AVG(salary)'])
-            ->from('employees')->where('department', 'ne')
+            ->from('employees')->where('department', null, 'ne')
             ->groupBy('department')->having('AVG(salary)', 5000, 'gt')->andHaving('COUNT(employee)', 5, 'gt')->build();
         $this->assertSame($expected, $query);
     }
@@ -174,9 +174,9 @@ final class SelectQueryTest extends TestCase
             ->leftJoin('departments', 'd', 'e.department_id = d.department_id')
             ->join('projects', 'p', 'e.employee_id = p.employee_id')
             ->rightJoin('customers', 'c', 'e.customer_id = c.customer_id')
-            ->where('e.employee_name', '??', '%clause%')
-            ->orWhere('d.id', 'gt', 45)
-            ->andWhere('p.passed', '=', 1)
+            ->where('e.employee_name', '%clause%', '??')
+            ->orWhere('d.id', 45, 'gt')
+            ->andWhere('p.passed', 1)
             ->orderBy('p.class')->orderBy('c.id', 'desc')
             ->limit(30, 10)
             ->build();

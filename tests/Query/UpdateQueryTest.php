@@ -13,7 +13,7 @@ final class UpdateQueryTest extends TestCase
     {
         $expected = "UPDATE users SET name = 'Jane', age = '20', affiliation = NULL WHERE id = '53';";
         $data = ['name' => 'Jane', 'age' => 20, 'affiliation' => null];
-        $query = Query::update('users')->set($data)->where('id', '=', '53')->build();
+        $query = Query::update('users')->set($data)->where('id', '53')->build();
         $this->assertSame($expected, $query);
     }
 
