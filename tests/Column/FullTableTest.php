@@ -15,7 +15,7 @@ final class FullTableTest extends TestCase
         $expected = "CREATE TABLE IF NOT EXISTS users (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, `username` VARCHAR(255) NOT NULL, `email` VARCHAR(255) NOT NULL, `password` VARCHAR(255) NOT NULL, `is_superadmin` INT(2) NOT NULL DEFAULT '0', `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIME, `update_time` DATETIME on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIME, CONSTRAINT users_PK PRIMARY KEY (id), CONSTRAINT username_UC UNIQUE (`username`), CONSTRAINT email_UC UNIQUE (`email`)) ENGINE = InnoDB;";
 
         $query = Table::create('users')->columns([
-            'id' => Col::integer(11)->unsigned()->pk()->ai(),
+            'id' => Col::integer(11)->unsigned()->ai()->pk(),
             'username' => Col::varchar()->unique(),
             'email' => Col::varchar()->unique(),
             'password' => Col::varchar(),
@@ -32,7 +32,7 @@ final class FullTableTest extends TestCase
         $expected = "CREATE TABLE IF NOT EXISTS tokens (`id` INT UNSIGNED NOT NULL AUTO_INCREMENT, `selector` VARCHAR(255) NOT NULL, `hashed_validator` VARCHAR(255) NOT NULL, `user_id` INT(11) UNSIGNED NOT NULL, `expiry` DATETIME NOT NULL, CONSTRAINT tokens_PK PRIMARY KEY (id), FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE) ENGINE = InnoDB;";
 
         $user = Table::create('users')->columns([
-            'id' => Col::integer(11)->unsigned()->pk()->ai(),
+            'id' => Col::integer(11)->unsigned()->ai()->pk(),
             'username' => Col::varchar()->unique(),
             'email' => Col::varchar()->unique(),
             'password' => Col::varchar(),
@@ -42,7 +42,7 @@ final class FullTableTest extends TestCase
         ]);
 
         $table = Table::create('tokens')->columns([
-            'id' => Col::integer()->unsigned()->pk()->ai(),
+            'id' => Col::integer()->unsigned()->ai()->pk(),
             'selector' => Col::varchar(),
             'hashed_validator' => Col::varchar(),
             'user_id' => Col::integer(11)->unsigned(),
@@ -54,12 +54,25 @@ final class FullTableTest extends TestCase
         $this->assertSame($expected, $query);
     }
 
+    public function test_table_with_conjugate_pk_build()
+    {
+        $expected = "CREATE TABLE IF NOT EXISTS test (`id` INT NOT NULL, `name` VARCHAR(255) NOT NULL, CONSTRAINT test_PK PRIMARY KEY (id, name)) ENGINE = InnoDB;";
+
+        $table = Table::create('test')->columns([
+            'id' => Col::integer()->pk(),
+            'name' => Col::varchar()->pk(),
+        ]);
+
+        $query = $table->build();
+        $this->assertSame($expected, $query);
+    }
+
     public function test_table_with_foreign_keys_column_does_not_exist_on_base_exception()
     {
         $this->expectException(Exception::class);
 
         $user = Table::create('users')->columns([
-            'id' => Col::integer(11)->unsigned()->pk()->ai(),
+            'id' => Col::integer(11)->unsigned()->ai()->pk(),
             'username' => Col::varchar()->unique(),
             'email' => Col::varchar()->unique(),
             'password' => Col::varchar(),
@@ -69,7 +82,7 @@ final class FullTableTest extends TestCase
         ]);
 
         $table = Table::create('tokens')->columns([
-            'id' => Col::integer()->unsigned()->pk()->ai(),
+            'id' => Col::integer()->unsigned()->ai()->pk(),
             'selector' => Col::varchar(),
             'hashed_validator' => Col::varchar(),
             'user_id' => Col::integer(11)->unsigned(),
@@ -84,7 +97,7 @@ final class FullTableTest extends TestCase
         $this->expectException(Exception::class);
 
         $user = Table::create('users')->columns([
-            'id' => Col::integer(11)->unsigned()->pk()->ai(),
+            'id' => Col::integer(11)->unsigned()->ai()->pk(),
             'username' => Col::varchar()->unique(),
             'email' => Col::varchar()->unique(),
             'password' => Col::varchar(),
@@ -94,7 +107,7 @@ final class FullTableTest extends TestCase
         ]);
 
         $table = Table::create('tokens')->columns([
-            'id' => Col::integer()->unsigned()->pk()->ai(),
+            'id' => Col::integer()->unsigned()->ai()->pk(),
             'selector' => Col::varchar(),
             'hashed_validator' => Col::varchar(),
             'user_id' => Col::integer(11)->unsigned(),
@@ -109,7 +122,7 @@ final class FullTableTest extends TestCase
         $this->expectException(Exception::class);
 
         $user = Table::create('users')->columns([
-            'id' => Col::integer(11)->unsigned()->pk()->ai(),
+            'id' => Col::integer(11)->unsigned()->ai()->pk(),
             'username' => Col::varchar()->unique(),
             'email' => Col::varchar()->unique(),
             'password' => Col::varchar(),
@@ -119,7 +132,7 @@ final class FullTableTest extends TestCase
         ]);
 
         $table = Table::create('tokens')->columns([
-            'id' => Col::integer()->unsigned()->pk()->ai(),
+            'id' => Col::integer()->unsigned()->ai()->pk(),
             'selector' => Col::varchar(),
             'hashed_validator' => Col::varchar(),
             'user_id' => Col::integer(11)->unsigned(),
