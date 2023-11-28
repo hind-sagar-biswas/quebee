@@ -15,7 +15,7 @@ trait Constraint
         if ($this->constraint === 'PRIMARY KEY') throw new BadMethodCallException("Already marked column as Primary Key. Cannot Mark as UNIQUE.", 1);
         
         if (!$this->constraint) $this->constraint = 'UNIQUE';
-        $this->constraint = 'UNIQUE ' . $this->constraint;
+        else $this->constraint = 'UNIQUE ' . $this->constraint;
         return $this;
     }
     
