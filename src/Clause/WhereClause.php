@@ -9,7 +9,7 @@ use Hindbiswas\QueBee\Query\QueryStruct;
 
 trait WhereClause
 {
-    protected null|string $where = null;
+    protected ?string $where = null;
 
     // Add a custom WHERE clause to the query
     public function whereClause(string $condition): self
@@ -22,8 +22,8 @@ trait WhereClause
     // Add a simple WHERE clause
     public function where(
         string $column,
+        int|string|null|bool $value = null,
         string $comparison = '=',
-        int|string|null|bool $value,
         int|string|null|bool $secondValue = null,
     ): self {
         if ($this->where !== null) return $this->andWhere($column, $comparison, $value, $secondValue);
@@ -34,8 +34,8 @@ trait WhereClause
     // Add an AND WHERE clause
     public function andWhere(
         string $column,
+        int|string|null|bool $value = null,
         string $comparison = '=',
-        int|string|null|bool $value,
         int|string|null|bool $secondValue = null,
         bool $not = false,
     ): self {
@@ -49,8 +49,8 @@ trait WhereClause
     // Add an OR WHERE clause
     public function orWhere(
         string $column,
+        int|string|null|bool $value = null,
         string $comparison = '=',
-        int|string|null|bool $value,
         int|string|null|bool $secondValue = null,
         bool $not = false,
     ): self {

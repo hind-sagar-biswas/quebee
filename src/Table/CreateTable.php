@@ -10,8 +10,10 @@ use Hindbiswas\QueBee\Table\Values\FK;
 class CreateTable
 {
     protected array $columnList; // Stores column definitions.
-    protected array $columns; // Stores column definitions.
+    protected array $columns;    // Stores column definitions.
     protected array $constraints = [
+        'UNIQUE INDEX' => [],   // Stores UNIQUE INDEX constraints.
+        'INDEX' => [],          // Stores INDEX-ed columns.
         'UNIQUE' => [],         // Stores UNIQUE constraints.
         'PRIMARY KEY' => [],    // Stores PRIMARY KEY constraints.
     ];
@@ -93,16 +95,28 @@ class CreateTable
     {
         
 
-        foreach ($this->constraints['PRIMARY KEY'] as $columnName) {
+        if (!empty($this->constraints['PRIMARY KEY'])) {
             $keyName = $this->name . "_PK";
             $constraintStr = "CONSTRAINT $keyName PRIMARY KEY (" . implode(', ', $this->constraints['PRIMARY KEY']) . ")";
             $this->columns[] = $constraintStr; // Add PRIMARY KEY constraint to columns.
         }
 
         foreach ($this->constraints['UNIQUE'] as $columnName) {
-            $keyName = $columnName . "_UC";
+            $keyName = $columnName . "_UNQ";
             $constraintStr = "CONSTRAINT $keyName UNIQUE (`$columnName`)";
             $this->columns[] = $constraintStr; // Add UNIQUE constraint to columns.
+        }
+
+        foreach ($this->constraints['INDEX'] as $columnName) {
+            $keyName = $columnName . "_IND";
+            $constraintStr = "INDEX $keyName (`$columnName`)";
+            $this->columns[] = $constraintStr; // Add INDEX constraint to columns.
+        }
+
+        foreach ($this->constraints['UNIQUE INDEX'] as $columnName) {
+            $keyName = $columnName . "_UIK";
+            $constraintStr = "UNIQUE INDEX $keyName (`$columnName`)";
+            $this->columns[] = $constraintStr; // Add UNIQUE INDEX constraint to columns.
         }
 
         foreach ($this->foreignList as $query) {
