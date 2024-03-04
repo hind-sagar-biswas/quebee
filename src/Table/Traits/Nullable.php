@@ -14,6 +14,6 @@ trait Nullable
     }
 
     public function nullValue(): string {
-        return ($this->nullable) ? 'NULL' : 'NOT NULL';
+        return ($this->nullable) ? 'NULL ' : 'NOT NULL ';
     }
 }
