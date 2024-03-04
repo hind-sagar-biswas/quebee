@@ -12,7 +12,7 @@ final class FullTableTest extends TestCase
 {
     public function test_basic_users_table_build()
     {
-        $expected = "CREATE TABLE IF NOT EXISTS users (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, `username` VARCHAR(255) NOT NULL, `email` VARCHAR(255) NOT NULL, `password` VARCHAR(255) NOT NULL, `is_superadmin` INT(2) NOT NULL DEFAULT '0', `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIME, `update_time` DATETIME on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIME, CONSTRAINT users_PK PRIMARY KEY (id), CONSTRAINT username_UNQ UNIQUE (`username`), CONSTRAINT email_UNQ UNIQUE (`email`)) ENGINE = InnoDB;";
+        $expected = "CREATE TABLE IF NOT EXISTS users (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, `username` VARCHAR(255) NOT NULL, `email` VARCHAR(255) NOT NULL, `password` VARCHAR(255) NOT NULL, `is_superadmin` INT(2) NOT NULL DEFAULT '0', `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, `update_time` DATETIME on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, CONSTRAINT users_PK PRIMARY KEY (id), CONSTRAINT username_UNQ UNIQUE (`username`), CONSTRAINT email_UNQ UNIQUE (`email`)) ENGINE = InnoDB;";
 
         $query = Table::create('users')->columns([
             'id' => Col::integer(11)->unsigned()->ai()->pk(),
@@ -143,7 +143,7 @@ final class FullTableTest extends TestCase
         $query = $table->build();
     }
 
-    public function test_table_with_foreign_keys_column_incompitable_for_type_exception()
+    public function test_table_with_foreign_keys_column_incompatible_for_type_exception()
     {
         $this->expectException(Exception::class);
 
@@ -166,5 +166,25 @@ final class FullTableTest extends TestCase
         ])->foreign('user_id')->onDelete(FK::CASCADE)->reference($user, 'email');
 
         $query = $table->build();
+    }
+
+
+    public function test_table_real_life_scenario()
+    {
+        $expected  = "CREATE TABLE IF NOT EXISTS tests (`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT, `uid` VARCHAR(32) NOT NULL, `receipt_id` INT(11) UNSIGNED NOT NULL, `article_title` VARCHAR(100) NULL DEFAULT NULL, `article_content` TEXT NULL DEFAULT NULL, `patient_name` VARCHAR(100) NULL DEFAULT NULL, `patient_age` VARCHAR(10) NULL DEFAULT NULL, `added_by` VARCHAR(100) NOT NULL DEFAULT 'admin', `last_edited_by` VARCHAR(100) NULL DEFAULT NULL, `date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, CONSTRAINT tests_PK PRIMARY KEY (id), CONSTRAINT uid_UNQ UNIQUE (`uid`)) ENGINE = InnoDB;";
+        $query = Table::create('tests')->columns([
+            'id' => Col::integer(11)->unsigned()->ai()->pk(),
+            'uid' => Col::varchar(32)->unique(),
+            'receipt_id' => Col::integer(11)->unsigned(),
+            'article_title' => Col::varchar(100)->default(DefaultVal::NULL),
+            'article_content' => Col::text()->default(DefaultVal::NULL),
+            'patient_name' => Col::varchar(100)->default(DefaultVal::NULL),
+            'patient_age' => Col::varchar(10)->default(DefaultVal::NULL),
+            'added_by' => Col::varchar(100)->default('admin'),
+            'last_edited_by' => Col::varchar(100)->default(DefaultVal::NULL),
+            'date' => Col::dateTime()->default(DefaultVal::CURRENT_TIME),
+        ])->build();
+
+        $this->assertSame($expected, $query);
     }
 }

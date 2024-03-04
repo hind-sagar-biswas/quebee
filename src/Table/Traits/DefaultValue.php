@@ -25,7 +25,7 @@ trait DefaultValue
         }
 
         if ($default == DefaultVal::NULL) $this->nullable();
-        $this->default = $default->name;
+        $this->default = $default->value;
 
         return $this;
     }
