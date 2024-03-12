@@ -30,6 +30,16 @@ final class InsertQueryTest extends TestCase
         $expected = "INSERT INTO users(id, name, age) VALUES ('1', 'John', '30');";
         $query = Query::insert($data)->into('users')->build();
         $this->assertSame($expected, $query);
+
+        // For restricted keys
+        $expected = "INSERT INTO office(name, `rank`, phone, types) VALUES ('Liza', 'COMPUTER TECHNICIAN', '01406727506', 'lab');";
+        $query = Query::insert([
+            'name' => 'Liza',
+            'rank' => 'COMPUTER TECHNICIAN',
+            'phone' => '01406727506',
+            'types' => 'lab',
+        ])->into('office')->build();
+        $this->assertSame($expected, $query);
     }
 
     // Test method to ensure a multiple INSERT query is built correctly
