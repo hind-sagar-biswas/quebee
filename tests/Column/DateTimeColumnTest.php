@@ -14,13 +14,13 @@ final class DateTimeColumnTest extends TestCase
         $expected = "`column` DATE NOT NULL";
         $query = Col::date()->build('column');
         $this->assertSame($expected, $query);
-       
+
         // Nullable DATE column
         $expected = "`column` DATE NULL";
         $query = Col::date()->nullable()->build('column');
         $this->assertSame($expected, $query);
     }
-   
+
     public function test_datetime_column_build()
     {
         // Basic DATETIME column
@@ -34,7 +34,7 @@ final class DateTimeColumnTest extends TestCase
         $this->assertSame($expected, $query);
 
         // DATETIME column with default CURRENT_TIME
-        $expected = "`column` DATETIME NOT NULL DEFAULT CURRENT_TIME";
+        $expected = "`column` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP";
         $query = Col::dateTime()->default(DefaultVal::CURRENT_TIME)->build('column');
         $this->assertSame($expected, $query);
 
