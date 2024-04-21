@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Hindbiswas\QueBee\Query;
 
 use Hindbiswas\QueBee\Query;
+use Hindbiswas\QueBee\SanitizeWord;
 use Hindbiswas\QueBee\Query\QueryStruct;
 
 class QueryInsert implements QueryStruct
@@ -56,14 +57,14 @@ class QueryInsert implements QueryStruct
         $sql = 'INSERT INTO ';
         
         if ($this->multiple) {
-            $columns = array_keys($this->data[0]);
-            $values = array_map(function ($d) { return  Query::flattenForValues($d); }, $this->data);
+            $columns = array_map(fn ($d) =>SanitizeWord::run($d), array_keys($this->data[0]));
+            $values = array_map(fn ($d) => Query::flattenForValues($d), $this->data);
 
             // Construct the SQL query for multiple data insertion
             $sql .= $this->table . '(' . implode(', ', $columns) . ') VALUES ';
             $sql .= implode(', ', $values) . ';';
         } else {
-            $columns = array_keys($this->data);
+            $columns = array_map(fn ($d) =>SanitizeWord::run($d), array_keys($this->data));
             $values = Query::flattenForValues($this->data);
 
             // Construct the SQL query for single data insertion

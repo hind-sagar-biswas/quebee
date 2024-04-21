@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Hindbiswas\QueBee\Query;
 
-use Hindbiswas\QueBee\Clause\GroupClause;
+use Hindbiswas\QueBee\SanitizeWord;
 use Hindbiswas\QueBee\Clause\JoinClause;
+use Hindbiswas\QueBee\Query\QueryStruct;
+use Hindbiswas\QueBee\Clause\GroupClause;
 use Hindbiswas\QueBee\Clause\LimitClause;
 use Hindbiswas\QueBee\Clause\OrderClause;
 use Hindbiswas\QueBee\Clause\WhereClause;
-use Hindbiswas\QueBee\Query\QueryStruct;
 
 class QuerySelect implements QueryStruct
 {
@@ -29,6 +30,8 @@ class QuerySelect implements QueryStruct
         if (!array_is_list($columns)) {
             $columnStrings = [];
             foreach ($columns as $alias => $columnName) {
+                $columnName = SanitizeWord::run($columnName);
+                if (!is_numeric($alias)) $alias = SanitizeWord::run($alias);
                 $columnStrings[] = ($alias !== $columnName and !is_numeric($alias)) ? "$columnName AS $alias" : $columnName;
             }
             $columns = $columnStrings;
