@@ -45,8 +45,8 @@ class Query
     // Flatten an array or string by separating elements with a comma
     public static function flattenByComma(array|string $data): string
     {
-        if (!is_array($data)) return $data;
-        return implode(', ', $data);
+        if (!is_array($data)) return SanitizeWord::run($data);
+        return implode(', ', array_map(fn (string $d): string => SanitizeWord::run($d), $data));
     }
 
     // Flatten an associative array for SET clauses in SQL UPDATE statements
@@ -54,7 +54,7 @@ class Query
     {
         $parsed_data = array_map(
             fn (string $k, $d): string => ($d === null) ? "$k = NULL" : "$k = '$d'",
-            array_keys($data),
+            array_map(fn (string $d): string => SanitizeWord::run($d), array_keys($data)),
             array_values($data)
         );
         return implode(', ', $parsed_data);
@@ -81,6 +81,7 @@ class Query
         string $comparison = '=',
         int|string|null|bool $secondValue = null
     ): string {
+        $column = SanitizeWord::run($column);
         $sqlComp = match ($comparison) {
             'gt', '>' => '>',
             'gte', '>=' => '>=',

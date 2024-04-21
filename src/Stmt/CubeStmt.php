@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hindbiswas\QueBee\Stmt;
 
+use Hindbiswas\QueBee\SanitizeWord;
 use Hindbiswas\QueBee\Stmt\StmtStruct;
 
 class CubeStmt implements StmtStruct
@@ -15,6 +16,8 @@ class CubeStmt implements StmtStruct
         if (!array_is_list($columns)) {
             $columnStrings = [];
             foreach ($columns as $alias => $columnName) {
+                $columnName = SanitizeWord::run($columnName);
+                if (!is_numeric($alias)) $alias = SanitizeWord::run($alias);
                 $columnStrings[] = "$columnName AS $alias";
             }
             $columns = $columnStrings;
